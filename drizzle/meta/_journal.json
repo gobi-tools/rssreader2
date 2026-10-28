@@ -8,6 +8,13 @@
       "when": 1792942350881,
       "tag": "0000_known_killraven",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1793200099987,
+      "tag": "0001_fantastic_emma_frost",
+      "breakpoints": true
     }
   ]
 }

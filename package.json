@@ -11,7 +11,7 @@
     "start": "NODE_ENV=production node --env-file-if-exists=.env dist/server.js",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate --config src/db/drizzle.config.ts",
-    "db:migrate": "mkdir data && drizzle-kit migrate --config src/db/drizzle.config.ts",
+    "db:migrate": "mkdir -p data && drizzle-kit migrate --config src/db/drizzle.config.ts",
     "db:push": "drizzle-kit push --config src/db/drizzle.config.ts",
     "db:studio": "drizzle-kit studio --config src/db/drizzle.config.ts",
     "auth:generate": "auth generate --config src/auth.ts --output src/db/schema.ts -y",
