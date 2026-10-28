@@ -76,9 +76,9 @@ export const subscription = sqliteTable("subscription", {
 
 export const sectionFeed = sqliteTable("section_feed", {
   sectionId: sectionId(),
-  subscriptionid: subscriptionid(),
+  subscriptionId: subscriptionid(),
 },
-  (table) => [primaryKey({ columns: [table.sectionId, table.subscriptionid] })],
+  (table) => [primaryKey({ columns: [table.sectionId, table.subscriptionId] })],
 );
 
 export const item = sqliteTable("item", {

@@ -14,7 +14,7 @@ export function listSectionItems(userId: string, sectionId: string, limit = 100)
       readAt: itemRead.readAt,
     })
     .from(sectionFeed)
-    .innerJoin(subscription, eq(subscription.id, sectionFeed.subscriptionid))
+    .innerJoin(subscription, eq(subscription.id, sectionFeed.subscriptionId))
     .innerJoin(item, eq(item.feedId, subscription.feedId))
     .innerJoin(feed, eq(feed.id, item.feedId))
     .leftJoin(itemRead, and(eq(itemRead.itemId, item.id), eq(itemRead.userId, userId)))
