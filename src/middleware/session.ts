@@ -12,6 +12,13 @@ export type AuthVariables = {
 
 export type AuthEnv = { Variables: AuthVariables };
 
+export type AuthedVariables = {
+  session: Session,
+  user: Session['user'],
+};
+
+export type AuthedEnv = { Variables: AuthedVariables };
+
 /**
  * Resolves the session from the request's cookies once and exposes
  * session/user on the context. Without a cookie better-auth short-circuits
