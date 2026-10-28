@@ -22,6 +22,7 @@
     "better-auth": "^1.7.12",
     "better-sqlite3": "^13.0.3",
     "drizzle-orm": "^0.45.4",
+    "feedsmith": "^3.0.1",
     "hono": "^4.11.9",
     "preact": "^11.0.2",
     "preact-iso": "^2.12.2",
