@@ -8,7 +8,7 @@ export default function Nav({ active }: NavProps) {
   return <nav>
     <menu role="menu">
       <li aria-selected={active === 'home'}>
-        <a href="/dashboard">
+        <a href="/home">
           <HomeIcon />
           <span>Home</span>
         </a>

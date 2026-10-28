@@ -42,7 +42,7 @@ export const requireAuth: MiddlewareHandler<AuthEnv> = async (c, next) => {
 /** Guard: guests only — signed-in users get bounced to the dashboard. */
 export const guestOnly: MiddlewareHandler<AuthEnv> = async (c, next) => {
   if (c.get('session')) {
-    return c.redirect('/dashboard', 303);
+    return c.redirect('/home', 303);
   }
   await next();
 };

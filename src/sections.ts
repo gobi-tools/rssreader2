@@ -1,8 +1,6 @@
 import { and, asc, eq, inArray, ne } from "drizzle-orm";
 import { section, sectionFeed, subscription } from "./db/feeds-schema.js";
 import { db } from "./db/index.js";
-import { check } from "better-auth";
-import { sec } from "better-auth/plugins";
 
 export class SectionError extends Error {};
 
