@@ -1,4 +1,11 @@
 import { parseFeed, type AnyFeed } from "feedsmith";
+import { db } from "./db/index.js";
+import { feed, item, subscription } from "./db/feeds-schema.js";
+import { eq, asc } from "drizzle-orm";
+
+// -------------------------------
+// FETCH AND PARSE
+// -------------------------------
 
 export type FeedItem = {
   guid: string;
@@ -168,4 +175,114 @@ function compact(items: RawItem[]): FeedItem[] {
       publishedAt: date && !Number.isNaN(date.getTime()) ? date : null,
     }];
   });
+}
+
+// -------------------------------
+// DB OPERATIONS
+// -------------------------------
+
+export async function saveFeed(fetched: FetchedFeed) {
+  const { items, ...meta } = fetched;
+  const values = { ...meta, lastFetchedAt: new Date(), lastError: null };
+  const [row] = await db
+    .insert(feed)
+    .values(values)
+    .onConflictDoUpdate({ target: feed.url, set: values })
+    .returning();
+
+  const inserted = 
+    items.length > 0 
+    ? await db
+      .insert(item)
+      .values(items.map((i) => ({ ...i, feedId: row!.id })))
+      .onConflictDoNothing()
+      .returning({ id: item.id })
+    : [];
+
+  return { feed: row, newItems: inserted.length };
+}
+
+export async function subscribe(userId: string, url: string) {
+  let row = await db.query.feed.findFirst({ where: eq(feed.url, url)});
+  row ??= (await saveFeed((await fetchFeed(url))!)).feed;
+
+  const inserted = await db
+    .insert(subscription)
+    .values({ userId, feedId: row!.id })
+    .onConflictDoNothing()
+    .returning();
+
+  if (inserted.length === 0) throw new FeedError("You're already subscribed to this feed");
+
+  return row;
+}
+
+export function listFeeds(userId: string) {
+  return db 
+    .select({
+      id: feed.id, 
+      subscriptionId: subscription.id,
+      title: feed.title,
+      url: feed.url,
+      siteUrl: feed.siteUrl
+    })
+    .from(subscription)
+    .innerJoin(feed, eq(feed.id, subscription.feedId))
+    .where(eq(subscription.userId, userId))
+    .orderBy(asc(feed.title));
+}
+
+// -------------------------------
+// REFRESH JOB
+// -------------------------------
+
+const REFRESH_CONCURRENCY = 5;
+let refreshing = false;
+
+export async function refreshFeeds() {
+  if (refreshing) return;
+  refreshing = true;
+
+  try {
+    const started = Date.now();
+    const feeds = await db.select().from(feed);
+    const results = [];
+
+    for (let i = 0; i < feeds.length; i += REFRESH_CONCURRENCY) {
+      results.push(...(await Promise.all(feeds.slice(i, i + REFRESH_CONCURRENCY).map(refreshFeed))));
+    }
+
+    const newItems = results.reduce((sum, r) => sum + r.newItems, 0);
+    const errors = results.filter((r) => r.error).length;
+    console.log(`[refresh] ${feeds.length} feeds, ${newItems} new items, ${errors} errors in ${Date.now() - started}ms`);
+  } finally {
+    refreshing = false;
+  }
+}
+
+async function refreshFeed(row: typeof feed.$inferSelect) {
+  try {
+    const fetched = await fetchFeed(row.url, row);
+    if (!fetched) {
+      await db
+        .update(feed)
+        .set({ lastFetchedAt: new Date(), lastError: null })
+        .where(eq(feed.id, row.id));
+      
+      return { newItems: 0, error: null };
+    }
+
+    const { newItems } = await saveFeed({ ...fetched, url: row.url });
+    return { newItems, error: null };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    await db
+      .update(feed)
+      .set({ lastFetchedAt: new Date(), lastError: message })
+      .where(eq(feed.id, row.id));
+    
+    console.error(`[refresh] ${row.url} ${message}`);
+
+    return { newItems: 0, error: message };
+  }
 }
