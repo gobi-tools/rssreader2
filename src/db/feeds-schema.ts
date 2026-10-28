@@ -15,7 +15,12 @@ const createdAt = () =>
 const userId = () =>
   text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: 'cascade' })
+    .references(() => user.id, { onDelete: 'cascade' });
+
+const feedId = () =>
+  text("feed_id")
+    .notNull()
+    .references(() => feed.id, { onDelete: 'cascade' })
 
 export const feed = sqliteTable("feed", {
   id: id(),
@@ -38,3 +43,10 @@ export const section = sqliteTable("section", {
 },
   (table) => [unique("section_userId_name_unique").on(table.userId, table.name)],
 );
+
+export const subscription = sqliteTable("subscription", {
+  id: id(),
+  userId: userId(),
+  feedId: feedId(),
+  createdAt: createdAt(),
+});
