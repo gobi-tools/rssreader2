@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `susbcription_userId_feedId_unique` ON `subscription` (`user_id`,`feed_id`);
