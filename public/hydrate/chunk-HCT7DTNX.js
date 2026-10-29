@@ -1,0 +1,1 @@
+import{a as t}from"./chunk-EI7MMDWY.js";function a(n){let e=new Date(n),r=e.getUTCFullYear()===new Date().getUTCFullYear();return e.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:r?void 0:"numeric",timeZone:"UTC"})}t(a,"formatDate");export{a};

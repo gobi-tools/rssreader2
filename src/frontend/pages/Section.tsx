@@ -1,5 +1,6 @@
 import { useState } from 'preact/hooks';
 import Nav from "../common/Nav.js";
+import { formatDate } from '../utills/utils.js';
 
 export type SectionProp = {
   id: string;
@@ -56,15 +57,4 @@ export default function Section({ section, items }: SectionProps) {
       })}
     </main>
   </>
-}
-
-function formatDate(iso: string): string {
-  const date = new Date(iso);
-  const sameYear = date.getUTCFullYear() === new Date().getUTCFullYear();
-  return date.toLocaleDateString("en-GB", {
-    day: 'numeric',
-    month: 'short',
-    year: sameYear ? undefined : 'numeric',
-    timeZone: 'UTC',
-  });
 }

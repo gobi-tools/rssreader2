@@ -4,7 +4,7 @@ export type FeedItemProp = {
   id: String;
   title: string | null;
   url: string;
-  siteUrl: string | null;
+  subscriptionId: string;
 };
 
 export type FeedsProps = {
@@ -23,8 +23,8 @@ export default function Feeds({ feeds }: FeedsProps) {
       </p>
       <ul>
         {feeds.map((f) => (
-          <li key={f.id}>
-            <a href={f.siteUrl ?? f.url}>{f.title ?? f.url}</a>
+          <li key={f.subscriptionId}>
+            <a href={`/feeds/subscription/${f.subscriptionId}`}>{f.title ?? f.url}</a>
           </li>
         ))}
       </ul>

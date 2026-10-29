@@ -1,7 +1,7 @@
 import { parseFeed, type AnyFeed } from "feedsmith";
 import { db } from "./db/index.js";
-import { feed, item, subscription } from "./db/feeds-schema.js";
-import { eq, asc } from "drizzle-orm";
+import { feed, item, itemRead, subscription } from "./db/feeds-schema.js";
+import { eq, asc, and, sql, desc } from "drizzle-orm";
 
 // -------------------------------
 // FETCH AND PARSE
@@ -190,20 +190,20 @@ export async function saveFeed(fetched: FetchedFeed) {
     .onConflictDoUpdate({ target: feed.url, set: values })
     .returning();
 
-  const inserted = 
-    items.length > 0 
-    ? await db
-      .insert(item)
-      .values(items.map((i) => ({ ...i, feedId: row!.id })))
-      .onConflictDoNothing()
-      .returning({ id: item.id })
-    : [];
+  const inserted =
+    items.length > 0
+      ? await db
+        .insert(item)
+        .values(items.map((i) => ({ ...i, feedId: row!.id })))
+        .onConflictDoNothing()
+        .returning({ id: item.id })
+      : [];
 
   return { feed: row, newItems: inserted.length };
 }
 
 export async function subscribe(userId: string, url: string) {
-  let row = await db.query.feed.findFirst({ where: eq(feed.url, url)});
+  let row = await db.query.feed.findFirst({ where: eq(feed.url, url) });
   row ??= (await saveFeed((await fetchFeed(url))!)).feed;
 
   const inserted = await db
@@ -218,9 +218,23 @@ export async function subscribe(userId: string, url: string) {
 }
 
 export function listFeeds(userId: string) {
-  return db 
+  return db
     .select({
-      id: feed.id, 
+      id: feed.id,
+      subscriptionId: subscription.id,
+      title: feed.title,
+      url: feed.url,
+    })
+    .from(subscription)
+    .innerJoin(feed, eq(feed.id, subscription.feedId))
+    .where(eq(subscription.userId, userId))
+    .orderBy(asc(feed.title));
+}
+
+export function getSubscribedFeed(subscriptionId: string, userId: string) {
+  return db
+    .select({
+      id: feed.id,
       subscriptionId: subscription.id,
       title: feed.title,
       url: feed.url,
@@ -228,9 +242,37 @@ export function listFeeds(userId: string) {
     })
     .from(subscription)
     .innerJoin(feed, eq(feed.id, subscription.feedId))
-    .where(eq(subscription.userId, userId))
-    .orderBy(asc(feed.title));
+    .where(and(eq(subscription.id, subscriptionId), eq(subscription.userId, userId)))
+    .get();
 }
+
+
+export function listFeedItems(feedId: string, userId: string, limit = 100) {
+  const date = sql<number>`coalesce(${item.publishedAt}, ${item.createdAt})`;
+  return db
+    .select({
+      id: item.id,
+      title: item.title,
+      url: item.url,
+      date: date.mapWith(item.publishedAt),
+      readAt: itemRead.readAt,
+    })
+    .from(item)
+    .leftJoin(itemRead, and(eq(itemRead.itemId, item.id), eq(itemRead.userId, userId)))
+    .where(eq(item.feedId, feedId))
+    .orderBy(desc(date))
+    .limit(limit)
+    .all();
+}
+
+export function deleteSubscribedFeed(subscriptionid: string, userId: string) {
+  const { changes } = db 
+    .delete(subscription)
+    .where(and(eq(subscription.id, subscriptionid), eq(subscription.userId, userId)))
+    .run();
+  return changes > 0;
+}
+
 
 // -------------------------------
 // REFRESH JOB
@@ -268,7 +310,7 @@ async function refreshFeed(row: typeof feed.$inferSelect) {
         .update(feed)
         .set({ lastFetchedAt: new Date(), lastError: null })
         .where(eq(feed.id, row.id));
-      
+
       return { newItems: 0, error: null };
     }
 
@@ -280,7 +322,7 @@ async function refreshFeed(row: typeof feed.$inferSelect) {
       .update(feed)
       .set({ lastFetchedAt: new Date(), lastError: message })
       .where(eq(feed.id, row.id));
-    
+
     console.error(`[refresh] ${row.url} ${message}`);
 
     return { newItems: 0, error: message };
