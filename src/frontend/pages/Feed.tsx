@@ -1,7 +1,7 @@
 import { useState } from "preact/hooks";
 import Nav from "../common/Nav.js";
 import { formatDate } from "../utills/utils.js";
-import { TrashIcon } from "../common/Icons.js";
+import { EditIcon, TrashIcon } from "../common/Icons.js";
 
 export type ItemProp = {
   id: string;
@@ -41,7 +41,12 @@ export default function Feed({ feed, items }: FeedProps) {
               <a href={feed.siteUrl} target={'_blank'}>{feed.siteUrl}</a>
             </hgroup>
           </div>
-          <form
+          <a href={`/feeds/subscription/${feed.subscriptionId}/delete/confirm`}>
+            <button>
+              <EditIcon/>
+            </button>
+          </a>
+          {/* <form
             method={'post'}
             action={`/feeds/subscription/${feed.subscriptionId}/delete`}
             onSubmit={(e) => {
@@ -51,7 +56,7 @@ export default function Feed({ feed, items }: FeedProps) {
             <button className={'error'} type={'submit'}>
               <TrashIcon />
             </button>
-          </form>
+          </form> */}
         </div>
       </div>
       <hr />

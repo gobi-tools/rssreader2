@@ -1,3 +1,4 @@
+import { LogoutIcon } from "../common/Icons.js";
 import Nav from "../common/Nav.js";
 
 type ProfileProps = {
@@ -22,7 +23,10 @@ export default function Profile({ email }: ProfileProps) {
       </div>
       <hr />
       <form method="post" action="/logout">
-        <button type="submit">Sign out</button>
+        <button type="submit" class={'error'}>
+          <LogoutIcon/>
+          <span>Sign out</span>
+        </button>
       </form>
     </main>
   </>

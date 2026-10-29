@@ -1,3 +1,4 @@
+import { PlusIcon, UpdateIcon } from "../common/Icons.js";
 import Nav from "../common/Nav.js";
 
 export type SectionFeedProp = {
@@ -57,7 +58,10 @@ export default function AddSection({
           ))}
         </fieldset>
 
-        <button type={'submit'}>Save</button>
+        <button type={'submit'}>
+          {!deleteAction && <><PlusIcon/><span>Add</span></>}
+          {deleteAction && <><UpdateIcon/><span>Update</span></>}
+        </button>
       </form>
       {deleteAction && 
         <form 

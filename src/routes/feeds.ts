@@ -5,6 +5,7 @@ import r from '../frontend/react-srv.js';
 import Feeds from "../frontend/pages/Feeds.js";
 import AddFeed from "../frontend/pages/AddFeed.js";
 import Feed from "../frontend/pages/Feed.js";
+import DeleteSubsctiption from "../frontend/pages/DeleteSubscription.js";
 
 export const feedsRoutes = new Hono<AuthedEnv>()
   .get("/", requireAuth, async (c) => {
@@ -43,6 +44,10 @@ export const feedsRoutes = new Hono<AuthedEnv>()
       items,
     };
     return c.html(r.render(Feed, props));
+  })
+  .get("/subscription/:subscriptionId/delete/confirm", requireAuth, (c) => {
+    const subscriptionId = c.req.param("subscriptionId");
+    return c.html(r.render(DeleteSubsctiption, { subscriptionId })); 
   })
   .post("/subscription/:subscriptionId/delete", requireAuth, (c) => {
     if (!deleteSubscribedFeed(c.req.param("subscriptionId"), c.var.user.id)) return c.notFound();
