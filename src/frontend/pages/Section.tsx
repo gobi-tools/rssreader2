@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
 import Nav from "../common/Nav.js";
-import { formatDate } from '../utills/utils.js';
+import { formatDate, getYear } from '../utills/utils.js';
 import { EditIcon } from '../common/Icons.js';
 
 export type SectionProp = {
@@ -22,7 +22,7 @@ export type SectionProps = {
   items: ItemProp[];
 }
 
-export type GroupedItem = {
+export type DetailedItem = {
   id: string;
   title: string | null;
   url: string;
@@ -30,15 +30,14 @@ export type GroupedItem = {
   feedTitle: string | null;
   read: boolean;
   day: string;
+  year: number;
 };
-
-export type GroupedItems = Record<string, GroupedItem[]>;
 
 export default function Section({ section, items }: SectionProps) {
   const [opened, setOpened] = useState<string[]>([]);
   const open = (id: string) => setOpened((ids) => [...ids, id]);
 
-  const grouped = groupByDate(items);
+  const details = addDetails(items);
 
   return <>
     <header>
@@ -63,51 +62,46 @@ export default function Section({ section, items }: SectionProps) {
       <hr />
 
       {items.length === 0 && <p>Nothing here yet.</p>}
-      {Object.keys(grouped).map((g) => {
-        const items = grouped[g];
-        return <>{
-          items.map((i, index) => {
-            const title = i.title ?? i.url;
-            const read = i.read || opened.includes(i.id);
-            return (
-              <>
-                <div className={`row disable-mobile ${index === items.length - 1 ? 'border-bottom' : ''}`} key={i.id}>
-                  <div className="col-2">{i.feedTitle}</div>
-                  <div className="col">
-                    <a
-                      href={`/items/${i.id}/open`}
-                      target={'_blank'}
-                      rel={'noopener'}
-                      onClick={() => open(i.id)}
-                      onAuxClick={() => open(i.id)}>
-                      {read ? title : <strong>{title}</strong>}
-                    </a>
-                  </div>
+      {details.map((i, index) => {
+        const title = i.title ?? i.url;
+        const read = i.read || opened.includes(i.id);
+
+        return (
+          <>
+            <div className={`row disable-mobile ${index === items.length - 1 ? 'border-bottom' : ''}`} key={i.id}>
+              <div className="col-3 text-light one-line">{i.feedTitle}</div>
+              <div className="col one-line">
+                <a
+                  href={`/items/${i.id}/open`}
+                  target={'_blank'}
+                  rel={'noopener'}
+                  onClick={() => open(i.id)}
+                  onAuxClick={() => open(i.id)}>
+                  {read ? title : <strong>{title}</strong>}
+                </a>
+              </div>
+              <div className={'col-2 text-light align-right'}>
+                {i.day}
+              </div>
+            </div>
+            {index > 0 && details?.[index - 1]?.year !== details?.[index]?.year &&
+              <div class={'row'}>
+                <div class={'column day-separator'}>
+                  {i.year}
                 </div>
-                {index === items.length - 1 &&
-                  <div class={'row'}>
-                    <div class={'column day-separator'}>
-                      {i.day}
-                    </div>
-                  </div>}
-              </>
-            )
-          })
-        }
-        </>
+              </div>
+            }
+          </>
+        )
       })}
-
-
     </main>
   </>
 }
 
-function groupByDate(items: ItemProp[]): GroupedItems {
-  const processed = items.map((i) => ({
+function addDetails(items: ItemProp[]): DetailedItem[] {
+  return items.map((i) => ({
     ...i,
     day: formatDate(i.date),
-  }));
-
-  const grouped = Object.groupBy(processed, i => i.day);
-  return grouped;
+    year: getYear(i.date),
+  }))
 }

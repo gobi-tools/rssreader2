@@ -1,6 +1,6 @@
 import { useState } from "preact/hooks";
 import Nav from "../common/Nav.js";
-import { formatDate } from "../utills/utils.js";
+import { formatDate, getYear } from "../utills/utils.js";
 import { EditIcon, TrashIcon } from "../common/Icons.js";
 
 export type ItemProp = {
@@ -17,16 +17,29 @@ export type FeedProp = {
   url: string;
   siteUrl: string;
   subscriptionId: string;
-}
+};
 
 export type FeedProps = {
   feed: FeedProp,
   items: ItemProp[];
-}
+};
+
+export type DetailedItem = {
+  id: string;
+  title: string | null;
+  url: string;
+  date: string;
+  feedTitle: string | null;
+  read: boolean;
+  day: string;
+  year: number;
+};
 
 export default function Feed({ feed, items }: FeedProps) {
   const [opened, setOpened] = useState<string[]>([]);
   const open = (id: string) => setOpened((ids) => [...ids, id]);
+
+  const details = addDetails(items);
 
   return <>
     <header>
@@ -43,48 +56,54 @@ export default function Feed({ feed, items }: FeedProps) {
           </div>
           <a href={`/feeds/subscription/${feed.subscriptionId}/delete/confirm`}>
             <button>
-              <EditIcon/>
+              <EditIcon />
             </button>
           </a>
-          {/* <form
-            method={'post'}
-            action={`/feeds/subscription/${feed.subscriptionId}/delete`}
-            onSubmit={(e) => {
-              if (!confirm("Delete this feed?")) e.preventDefault()
-            }}
-          >
-            <button className={'error'} type={'submit'}>
-              <TrashIcon />
-            </button>
-          </form> */}
         </div>
       </div>
       <hr />
 
       {items.length === 0 && <p>Nothing here yet.</p>}
 
-      <ul className={'main-list'}>
-        {items.map((i) => {
-          const name = i.title ?? i.url;
-          const read = i.read || opened.includes(i.id);
-          return (
-            <li className="row disable-mobile" key={i.id}>
-              <div className="col">
+      {details.map((i, index) => {
+        const title = i.title ?? i.url;
+        const read = i.read || opened.includes(i.id);
+
+        return (
+          <>
+            <div className={`row disable-mobile ${index === items.length - 1 ? 'border-bottom' : ''}`} key={i.id}>
+              <div className="col one-line">
                 <a
                   href={`/items/${i.id}/open`}
                   target={'_blank'}
                   rel={'noopener'}
                   onClick={() => open(i.id)}
                   onAuxClick={() => open(i.id)}>
-                  {read ? name : <strong>{name}</strong>}
+                  {read ? title : <strong>{title}</strong>}
                 </a>
               </div>
-              <div className="col-2 align-right">{formatDate(i.date)}</div>
-            </li>
-          )
-        })}
-      </ul>
-
+              <div className={'col-2 text-light align-right'}>
+                {i.day}
+              </div>
+            </div>
+            {index > 0 && details?.[index - 1]?.year !== details?.[index]?.year &&
+              <div class={'row'}>
+                <div class={'column day-separator'}>
+                  {i.year}
+                </div>
+              </div>
+            }
+          </>
+        )
+      })}
     </main>
   </>
+}
+
+function addDetails(items: ItemProp[]): DetailedItem[] {
+  return items.map((i) => ({
+    ...i,
+    day: formatDate(i.date),
+    year: getYear(i.date),
+  }))
 }

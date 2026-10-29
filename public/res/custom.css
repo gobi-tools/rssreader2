@@ -12,3 +12,13 @@ ul.main-list {
   padding-block: var(--space-m);
   color: var(--color-control);
 }
+
+.text-light {
+  color: var(--color-control);
+}
+
+.one-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
