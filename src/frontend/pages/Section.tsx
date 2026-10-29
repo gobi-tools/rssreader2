@@ -1,6 +1,7 @@
 import { useState } from 'preact/hooks';
 import Nav from "../common/Nav.js";
 import { formatDate } from '../utills/utils.js';
+import { EditIcon } from '../common/Icons.js';
 
 export type SectionProp = {
   id: string;
@@ -25,15 +26,30 @@ export default function Section({ section, items }: SectionProps) {
   const [opened, setOpened] = useState<string[]>([]);
   const open = (id: string) => setOpened((ids) => [...ids, id]);
 
+  console.log(items);
+
   return <>
     <header>
-      <Nav active={'home'}/>
+      <Nav active={'home'} />
     </header>
     <main>
-      <h1>{section.name}</h1>
-      <p>
-        <a href={`/sections/${section.id}/edit`}>Edit section</a>
-      </p>
+      <div role={'group'}>
+        <div className={'row'}>
+          <div>
+            <hgroup>
+              <h1>{section.name}</h1>
+              <p>{items.length} articles</p>
+            </hgroup>
+          </div>
+          <a href={`/sections/${section.id}/edit`}>
+            <button>
+              <EditIcon />
+            </button>
+          </a>
+        </div>
+      </div>
+      <hr />
+
       {items.length === 0 && <p>Nothing here yet.</p>}
       {items.map((i) => {
         const title = i.title ?? i.url;
