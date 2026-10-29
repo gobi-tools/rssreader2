@@ -1,6 +1,7 @@
 import { useState } from "preact/hooks";
 import Nav from "../common/Nav.js";
 import { formatDate } from "../utills/utils.js";
+import { TrashIcon } from "../common/Icons.js";
 
 export type ItemProp = {
   id: string;
@@ -31,21 +32,29 @@ export default function Feed({ feed, items }: FeedProps) {
       <Nav active={'feeds'} />
     </header>
     <main>
-      <hgroup>
-        <h1>{feed.title}</h1>
-        <a href={feed.url} target={'_blank'}>{feed.url}</a>
-      </hgroup>
+      <div role={'group'}>
+        <div className={'row'}>
+          <div>
+            <hgroup>
+              <h1>{feed.title}</h1>
+              <a href={feed.url} target={'_blank'}>{feed.url}</a>
+            </hgroup>
+          </div>
+          <form
+            method={'post'}
+            action={`/feeds/subscription/${feed.subscriptionId}/delete`}
+            onSubmit={(e) => {
+              if (!confirm("Delete this feed?")) e.preventDefault()
+            }}
+          >
+            <button className={'error'} type={'submit'}>
+              <TrashIcon/>
+            </button>
+          </form>
+        </div>
+      </div>
+      <hr/>
 
-      <form 
-          method={'post'}
-          action={`/feeds/subscription/${feed.subscriptionId}/delete`}
-          onSubmit={(e) => {
-            if (!confirm("Delete this feed?")) e.preventDefault()
-          }}
-        >
-          <button type={'submit'}>Delete feed</button>
-        </form>
-        
       {items.length === 0 && <p>Nothing here yet.</p>}
       {items.map((i) => {
         const name = i.title ?? i.url;
