@@ -15,6 +15,7 @@ export type ItemProp = {
 export type FeedProp = {
   title: string;
   url: string;
+  siteUrl: string;
   subscriptionId: string;
 }
 
@@ -37,7 +38,7 @@ export default function Feed({ feed, items }: FeedProps) {
           <div>
             <hgroup>
               <h1>{feed.title}</h1>
-              <a href={feed.url} target={'_blank'}>{feed.url}</a>
+              <a href={feed.siteUrl} target={'_blank'}>{feed.siteUrl}</a>
             </hgroup>
           </div>
           <form

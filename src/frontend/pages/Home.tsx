@@ -1,3 +1,4 @@
+import { PlusIcon } from "../common/Icons.js";
 import Nav from "../common/Nav.js";
 
 type SectionProp = {
@@ -15,11 +16,24 @@ export default function Home({ sections }: DashboardProps) {
       <Nav active={'home'} />
     </header>
     <main>
-      <h1>Home</h1>
-      <p>
-        <a href="/sections/new">New Section</a>
-      </p>
-      <ul>
+      <div role={'group'}>
+        <div className={'row'}>
+          <div>
+            <hgroup>
+              <h1>Home</h1>
+              <span>{sections.length} Newsletters</span>
+            </hgroup>
+          </div>
+        <a href="/sections/new">
+          <button class={'success'} type={'reset'}>
+            <PlusIcon/>
+          </button>
+        </a>
+        </div>
+      </div>
+      <hr/>
+
+      <ul className={'main-list'}>
         {sections.map((s) => (
           <li key={s.id}>
             <a href={`/sections/${s.id}`}>{s.name}</a>

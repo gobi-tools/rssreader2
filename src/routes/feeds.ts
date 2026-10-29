@@ -37,6 +37,7 @@ export const feedsRoutes = new Hono<AuthedEnv>()
       feed: {
         title: feed.title,
         url: feed.url,
+        siteUrl: feed.siteUrl,
         subscriptionId: feed.subscriptionId,
       },
       items,
