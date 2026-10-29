@@ -11,7 +11,7 @@
   text-align: right;
 }
 
-.day-separator {
+.year-separator {
   text-align: center;
   padding-block: var(--space-m);
   color: var(--color-control);

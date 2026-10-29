@@ -91,7 +91,7 @@ export default function Section({ section, items }: SectionProps) {
               </div>
               {showYear &&
                 <div class={'row'}>
-                  <div class={'column day-separator'}>
+                  <div class={'column year-separator'}>
                     {current.year}
                   </div>
                 </div>

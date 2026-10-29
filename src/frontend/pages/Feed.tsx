@@ -92,7 +92,7 @@ export default function Feed({ feed, items }: FeedProps) {
               </div>
               {showYear &&
                 <div class={'row'}>
-                  <div class={'column day-separator'}>
+                  <div class={'column year-separator'}>
                     {current.year}
                   </div>
                 </div>
