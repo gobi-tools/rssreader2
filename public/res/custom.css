@@ -3,13 +3,12 @@ ul.main-list {
   margin-left: 0;
 }
 
-/* ul.main-list>li {
-  border-bottom: 1px solid var(--color-borders-light-1);
-}
-ul.main-list a {
-  text-decoration: none;
-} */
-
 .align-right {
   text-align: right;
+}
+
+.day-separator {
+  text-align: center;
+  padding-block: var(--space-m);
+  color: var(--color-control);
 }
