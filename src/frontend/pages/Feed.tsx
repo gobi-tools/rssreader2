@@ -64,41 +64,43 @@ export default function Feed({ feed, items }: FeedProps) {
       <hr />
 
       {items.length === 0 && <p>Nothing here yet.</p>}
-      {details.map((current, index) => {
-        const title = current.title ?? current.url;
-        const read = current.read || opened.includes(current.id);
+      <ul className={'main-list'}>
+        {details.map((current, index) => {
+          const title = current.title ?? current.url;
+          const read = current.read || opened.includes(current.id);
 
-        const previous = details?.[index - 1];
+          const previous = details?.[index - 1];
 
-        const showYear = index > 0 && previous.year !== current.year;
+          const showYear = index > 0 && previous.year !== current.year;
 
-        return (
-          <>
-            <div className={`row disable-mobile ${index === items.length - 1 ? 'border-bottom' : ''}`} key={current.id}>
-              <div className="col one-line">
-                <a
-                  href={`/items/${current.id}/open`}
-                  target={'_blank'}
-                  rel={'noopener'}
-                  onClick={() => open(current.id)}
-                  onAuxClick={() => open(current.id)}>
-                  {read ? title : <strong>{title}</strong>}
-                </a>
-              </div>
-              <div className={'col-2 text-light align-right'}>
-                {current.day}
-              </div>
-            </div>
-            {showYear &&
-              <div class={'row'}>
-                <div class={'column day-separator'}>
-                  {current.year}
+          return (
+            <li>
+              <div className={`row disable-mobile ${index === items.length - 1 ? 'border-bottom' : ''}`} key={current.id}>
+                <div className="col one-line">
+                  <a
+                    href={`/items/${current.id}/open`}
+                    target={'_blank'}
+                    rel={'noopener'}
+                    onClick={() => open(current.id)}
+                    onAuxClick={() => open(current.id)}>
+                    {read ? <span>{title}</span> : <strong>{title}</strong>}
+                  </a>
+                </div>
+                <div className={'col-2 text-light align-right'}>
+                  {current.day}
                 </div>
               </div>
-            }
-          </>
-        )
-      })}
+              {showYear &&
+                <div class={'row'}>
+                  <div class={'column day-separator'}>
+                    {current.year}
+                  </div>
+                </div>
+              }
+            </li>
+          )
+        })}
+      </ul>
     </main>
   </>
 }
