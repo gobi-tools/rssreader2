@@ -10,7 +10,7 @@ export function listSectionItems(userId: string, sectionId: string, limit = 100)
       title: item.title,
       url: item.url,
       date: date.mapWith(item.publishedAt),
-      feedTitle: item.title,
+      feedTitle: feed.title,
       readAt: itemRead.readAt,
     })
     .from(sectionFeed)

@@ -3,8 +3,10 @@ import { requireAuth, type AuthedEnv } from "../middleware/session.js";
 import { listFeeds } from "../feeds.js";
 import r from '../frontend/react-srv.js';
 import AddSection from "../frontend/pages/AddSection.js";
-import { createSection, SectionError } from "../sections.js";
+import { createSection, getSection, SectionError } from "../sections.js";
 import { error } from "console";
+import { listSectionItems } from "../items.js";
+import Section from "../frontend/pages/Section.js";
 
 async function readForm(c: Context) {
   const body = await c.req.parseBody({ all: true });
@@ -38,4 +40,16 @@ export const sectionsRoutes = new Hono<AuthedEnv>()
       return c.html(r.render(AddSection, props), 422);
     }
     return c.redirect(`/sections/${created.id}`);
+  })
+  // the reading view
+  .get("/:id", requireAuth, (c) => {
+    const found = getSection(c.var.user.id, c.req.param("id"));
+    if (!found) return c.notFound();
+    const sectionItems = listSectionItems(c.var.user.id, found.id);
+    const items = sectionItems.map(({ readAt, date, ...i }) => ({
+      ...i,
+      date: date.toISOString(),
+      read: readAt !== null,
+    }));
+    return c.html(r.render(Section, { section: { id: found.id, name: found.name}, items}));
   });

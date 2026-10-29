@@ -7,6 +7,7 @@ import { profileRoutes } from './routes/profile.js';
 import { feedsRoutes } from './routes/feeds.js';
 import { homeRoutes } from './routes/home.js';
 import { sectionsRoutes } from './routes/sections.js';
+import { itemsRoute } from './routes/items.js';
 
 export const app = new Hono()
   .use('/*', serveStatic({ root: './public' }))
@@ -15,6 +16,7 @@ export const app = new Hono()
   .use(session).route('/home', homeRoutes)
   .use(session).route('/profile', profileRoutes)
   .use(session).route('/feeds', feedsRoutes)
-  .use(session).route('/sections', sectionsRoutes);
+  .use(session).route('/sections', sectionsRoutes)
+  .use(session).route('/items', itemsRoute);
 
 export type AppType = typeof app;
