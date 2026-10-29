@@ -64,7 +64,7 @@ export default function AddSection({
           method={'post'}
           action={deleteAction}
           onSubmit={(e) => {
-            if (confirm("Delete this section?")) e.preventDefault()
+            if (!confirm("Delete this section?")) e.preventDefault()
           }}
         >
           <button type={'submit'}>Delete section</button>

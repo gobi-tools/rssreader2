@@ -60,6 +60,14 @@ export function updateSection(userId: string, id: string, name: string, subscrip
   });
 }
 
+export function deleteSection(userId: string, id: string) {
+  const { changes } = db 
+    .delete(section)
+    .where(and(eq(section.id, id), eq(section.userId, userId)))
+    .run();
+  return changes > 0;
+}
+
 function checkName(tx: Tx, userId: string, name: string, exceptId?: string) {
   name = name.trim();
   if (!name) throw new SectionError("Give a section a name");

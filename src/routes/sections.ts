@@ -3,7 +3,7 @@ import { requireAuth, type AuthedEnv } from "../middleware/session.js";
 import { listFeeds } from "../feeds.js";
 import r from '../frontend/react-srv.js';
 import AddSection from "../frontend/pages/AddSection.js";
-import { createSection, getSection, SectionError } from "../sections.js";
+import { createSection, deleteSection, getSection, SectionError, updateSection } from "../sections.js";
 import { error } from "console";
 import { listSectionItems } from "../items.js";
 import Section from "../frontend/pages/Section.js";
@@ -41,6 +41,46 @@ export const sectionsRoutes = new Hono<AuthedEnv>()
     }
     return c.redirect(`/sections/${created.id}`);
   })
+  .get("/:id/edit", requireAuth, async (c) => {
+    const id = c.req.param("id");
+    const found = getSection(c.var.user.id, id);
+    if (!found) return c.notFound();
+    const feeds = await listFeeds(c.var.user.id);
+    const props = {
+      heading: 'Edit section',
+      action: `/sections/${id}`,
+      deleteAction: `/sections/${id}/delete`,
+      name: found.name,
+      feeds,
+      checked: found.checked
+    };
+    return c.html(r.render(AddSection, props));
+  })
+  .post("/:id", requireAuth, async (c) => {
+    const id = c.req.param("id");
+    const { name, checked } = await readForm(c);
+    try {
+      if (!updateSection(c.var.user.id, id, name, checked)) return c.notFound();
+    } catch (error) {
+      if (!(error instanceof SectionError)) throw error;
+      const feeds = await listFeeds(c.var.user.id);
+      const props = {
+        heading: 'Edit section',
+        action: `/sections/${id}`,
+        deleteAction: `/sections/${id}/delete`,
+        name,
+        feeds,
+        checked,
+        formError: error.message,
+      };
+      return c.html(r.render(AddSection, props), 422);
+    }
+    return c.redirect(`/sections/${id}`);
+  })
+  .post("/:id/delete", requireAuth, (c) => {
+    if (!deleteSection(c.var.user.id, c.req.param("id"))) return c.notFound();
+    return c.redirect("/home");
+  })
   // the reading view
   .get("/:id", requireAuth, (c) => {
     const found = getSection(c.var.user.id, c.req.param("id"));
@@ -51,5 +91,5 @@ export const sectionsRoutes = new Hono<AuthedEnv>()
       date: date.toISOString(),
       read: readAt !== null,
     }));
-    return c.html(r.render(Section, { section: { id: found.id, name: found.name}, items}));
+    return c.html(r.render(Section, { section: { id: found.id, name: found.name }, items }));
   });

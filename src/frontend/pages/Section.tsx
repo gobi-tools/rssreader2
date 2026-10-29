@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useState } from 'preact/hooks';
 import Nav from "../common/Nav.js";
 
 export type SectionProp = {
