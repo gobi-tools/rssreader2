@@ -7,6 +7,7 @@ import { createSection, deleteSection, getSection, SectionError, updateSection }
 import { error } from "console";
 import { listSectionItems } from "../items.js";
 import Section from "../frontend/pages/Section.js";
+import DeleteSection from "../frontend/pages/DeleteSection.js";
 
 async function readForm(c: Context) {
   const body = await c.req.parseBody({ all: true });
@@ -47,9 +48,10 @@ export const sectionsRoutes = new Hono<AuthedEnv>()
     if (!found) return c.notFound();
     const feeds = await listFeeds(c.var.user.id);
     const props = {
+      id,
       heading: 'Edit section',
       action: `/sections/${id}`,
-      deleteAction: `/sections/${id}/delete`,
+      isEditing: true,
       name: found.name,
       feeds,
       checked: found.checked
@@ -65,9 +67,10 @@ export const sectionsRoutes = new Hono<AuthedEnv>()
       if (!(error instanceof SectionError)) throw error;
       const feeds = await listFeeds(c.var.user.id);
       const props = {
+        id,
         heading: 'Edit section',
         action: `/sections/${id}`,
-        deleteAction: `/sections/${id}/delete`,
+        isEditing: true,
         name,
         feeds,
         checked,
@@ -76,6 +79,10 @@ export const sectionsRoutes = new Hono<AuthedEnv>()
       return c.html(r.render(AddSection, props), 422);
     }
     return c.redirect(`/sections/${id}`);
+  })
+  .get("/:id/delete", requireAuth, (c) => {
+    const sectionId = c.req.param("id");
+    return c.html(r.render(DeleteSection, { sectionId }));
   })
   .post("/:id/delete", requireAuth, (c) => {
     if (!deleteSection(c.var.user.id, c.req.param("id"))) return c.notFound();

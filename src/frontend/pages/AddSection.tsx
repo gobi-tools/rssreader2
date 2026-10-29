@@ -1,4 +1,4 @@
-import { PlusIcon, UpdateIcon } from "../common/Icons.js";
+import { PlusIcon, TrashIcon, UpdateIcon } from "../common/Icons.js";
 import Nav from "../common/Nav.js";
 
 export type SectionFeedProp = {
@@ -8,28 +8,30 @@ export type SectionFeedProp = {
 };
 
 export type AddSectionProps = {
+  id: string,
   heading: string;
   action: string;
   name?: string;
   feeds: SectionFeedProp[];
   checked?: string[]; // subscription ids
-  deleteAction?: string; // set when editing
+  isEditing?: boolean; // set when editing
   formError?: string;
 };
 
 export default function AddSection({
+  id,
   heading,
   action,
   name,
-  feeds, 
+  feeds,
   checked,
-  deleteAction,
+  isEditing,
   formError
 }: AddSectionProps
 ) {
   return <>
     <header>
-      <Nav active={'feeds'}/>
+      <Nav active={'feeds'} />
     </header>
     <main>
       <h1>{heading}</h1>
@@ -44,36 +46,34 @@ export default function AddSection({
           <legend>Feeds</legend>
 
           {feeds.length === 0 &&
-          <p>No feeds yet. <a href="/feeds/new">Add a feed</a> first.</p>}
+            <p>No feeds yet. <a href="/feeds/new">Add a feed</a> first.</p>}
 
           {feeds.map((f) => (
             <label key={f.subscriptionId}>
-              <input 
+              <input
                 type={"checkbox"}
                 name={"subscriptionIds"}
                 value={f.subscriptionId}
-                defaultChecked={checked?.includes(f.subscriptionId)}/>
+                defaultChecked={checked?.includes(f.subscriptionId)} />
               {f.title ?? f.url}
             </label>
           ))}
         </fieldset>
 
-        <button type={'submit'}>
-          {!deleteAction && <><PlusIcon/><span>Add</span></>}
-          {deleteAction && <><UpdateIcon/><span>Update</span></>}
-        </button>
+        <div className={'row disable-mobile'}>
+          <button type={'submit'}>
+            {!isEditing && <><PlusIcon /><span>Add</span></>}
+            {isEditing && <><UpdateIcon /><span>Update</span></>}
+          </button>
+          <div></div>
+          {isEditing &&
+            <a href={`/sections/${id}/delete`} role={'button'} class={'error'}>
+              <TrashIcon />
+              <span>Delete</span>
+            </a>
+          }
+        </div>
       </form>
-      {deleteAction && 
-        <form 
-          method={'post'}
-          action={deleteAction}
-          onSubmit={(e) => {
-            if (!confirm("Delete this section?")) e.preventDefault()
-          }}
-        >
-          <button type={'submit'}>Delete section</button>
-        </form>
-      }
     </main>
   </>
 }
