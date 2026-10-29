@@ -8,7 +8,7 @@ export type AddFeedProps = {
 
 export default function AddFeed({ url, formError }: AddFeedProps) {
   const [busy, setBusy] = useState(false);
-  
+
   useEffect(() => {
     const reset = (e: PageTransitionEvent) => e.persisted && setBusy(false);
     window.addEventListener('pageshow', reset);
@@ -17,22 +17,23 @@ export default function AddFeed({ url, formError }: AddFeedProps) {
 
   return <>
     <header>
-      <Nav active={'feeds'}/>
+      <Nav active={'feeds'} />
     </header>
     <main>
-      <h1>Add a feed</h1>
+      <h1>New feed</h1>
+
       {formError && <p className="error">{formError}</p>}
       <form method="post" action="/feeds" onSubmit={() => setBusy(true)}>
         <label>
           Feed URL
-          <input 
-            type={'url'} 
-            name={'url'} 
-            defaultValue={url} 
-            required 
+          <input
+            type={'url'}
+            name={'url'}
+            defaultValue={url}
+            required
             readOnly={busy}
             placeholder={'https://example.com/feed'}
-            />
+          />
         </label>
         <button type={'submit'} disabled={busy} aria-busy={busy}>Confirm</button>
       </form>

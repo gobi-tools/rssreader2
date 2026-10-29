@@ -10,8 +10,17 @@ export default function Profile({ email }: ProfileProps) {
       <Nav active={'profile'}></Nav>
     </header>
     <main>
-      <h1>Profile</h1>
-      <p>Welcome back, {email}</p>
+      <div role={'group'}>
+        <div className={'row'}>
+          <div>
+            <hgroup>
+              <h1>Profile</h1>
+              <p>Welcome back, {email}</p>
+            </hgroup>
+          </div>
+        </div>
+      </div>
+      <hr />
       <form method="post" action="/logout">
         <button type="submit">Sign out</button>
       </form>

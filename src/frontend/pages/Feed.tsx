@@ -48,33 +48,37 @@ export default function Feed({ feed, items }: FeedProps) {
             }}
           >
             <button className={'error'} type={'submit'}>
-              <TrashIcon/>
+              <TrashIcon />
             </button>
           </form>
         </div>
       </div>
-      <hr/>
+      <hr />
 
       {items.length === 0 && <p>Nothing here yet.</p>}
-      {items.map((i) => {
-        const name = i.title ?? i.url;
-        const read = i.read || opened.includes(i.id);
-        return (
-          <div className="row" key={i.id}>
-            <div className="col">
-              <a
-                href={`/items/${i.id}/open`}
-                target={'_blank'}
-                rel={'noopener'}
-                onClick={() => open(i.id)}
-                onAuxClick={() => open(i.id)}>
-                {read ? name : <strong>{name}</strong>}
-              </a>
-            </div>
-            <div className="col-2">{formatDate(i.date)}</div>
-          </div>
-        )
-      })}
+
+      <ul className={'main-list'}>
+        {items.map((i) => {
+          const name = i.title ?? i.url;
+          const read = i.read || opened.includes(i.id);
+          return (
+            <li className="row disable-mobile" key={i.id}>
+              <div className="col">
+                <a
+                  href={`/items/${i.id}/open`}
+                  target={'_blank'}
+                  rel={'noopener'}
+                  onClick={() => open(i.id)}
+                  onAuxClick={() => open(i.id)}>
+                  {read ? name : <strong>{name}</strong>}
+                </a>
+              </div>
+              <div className="col-2 align-right">{formatDate(i.date)}</div>
+            </li>
+          )
+        })}
+      </ul>
+
     </main>
   </>
 }
