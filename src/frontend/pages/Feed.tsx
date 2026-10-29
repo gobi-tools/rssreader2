@@ -64,32 +64,35 @@ export default function Feed({ feed, items }: FeedProps) {
       <hr />
 
       {items.length === 0 && <p>Nothing here yet.</p>}
+      {details.map((current, index) => {
+        const title = current.title ?? current.url;
+        const read = current.read || opened.includes(current.id);
 
-      {details.map((i, index) => {
-        const title = i.title ?? i.url;
-        const read = i.read || opened.includes(i.id);
+        const previous = details?.[index - 1];
+
+        const showYear = index > 0 && previous.year !== current.year;
 
         return (
           <>
-            <div className={`row disable-mobile ${index === items.length - 1 ? 'border-bottom' : ''}`} key={i.id}>
+            <div className={`row disable-mobile ${index === items.length - 1 ? 'border-bottom' : ''}`} key={current.id}>
               <div className="col one-line">
                 <a
-                  href={`/items/${i.id}/open`}
+                  href={`/items/${current.id}/open`}
                   target={'_blank'}
                   rel={'noopener'}
-                  onClick={() => open(i.id)}
-                  onAuxClick={() => open(i.id)}>
+                  onClick={() => open(current.id)}
+                  onAuxClick={() => open(current.id)}>
                   {read ? title : <strong>{title}</strong>}
                 </a>
               </div>
               <div className={'col-2 text-light align-right'}>
-                {i.day}
+                {current.day}
               </div>
             </div>
-            {index > 0 && details?.[index - 1]?.year !== details?.[index]?.year &&
+            {showYear &&
               <div class={'row'}>
                 <div class={'column day-separator'}>
-                  {i.year}
+                  {current.year}
                 </div>
               </div>
             }
