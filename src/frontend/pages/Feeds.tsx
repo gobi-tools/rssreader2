@@ -18,7 +18,7 @@ export default function Feeds({ feeds }: FeedsProps) {
       <Nav active={'feeds'} />
     </header>
     <main>
-      <div role={"group"}>
+      <section role={"group"}>
         <div className={"row"}>
           <div class={'header'}>
             <hgroup>
@@ -32,8 +32,7 @@ export default function Feeds({ feeds }: FeedsProps) {
             </button>
           </a>
         </div>
-      </div>
-      <hr />
+      </section>
 
       <ul className={'main-list'}>
         {feeds.map((f) => (

@@ -46,7 +46,7 @@ export default function Feed({ feed, items }: FeedProps) {
       <Nav active={'feeds'} />
     </header>
     <main>
-      <div role={'group'}>
+      <section role={'group'}>
         <div className={'row'}>
           <div className={'header'}>
             <hgroup>
@@ -61,8 +61,7 @@ export default function Feed({ feed, items }: FeedProps) {
             <TrashIcon/>
           </a>
         </div>
-      </div>
-      <hr />
+      </section>
 
       {items.length === 0 && <p>Nothing here yet.</p>}
       {grouped.map((group) => (

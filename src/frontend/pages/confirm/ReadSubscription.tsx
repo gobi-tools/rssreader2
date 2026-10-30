@@ -11,11 +11,12 @@ export default function ReadSubscription({ subscriptionId }: ReadSubscriptionPro
       <Nav active='feeds' />
     </header>
     <main>
-      <hgroup>
-        <h1>Read?</h1>
-        <p>Are you sure you want to mark this feed as read?</p>
-      </hgroup>
-      <hr />
+      <section>
+        <hgroup>
+          <h1>Read?</h1>
+          <p>Are you sure you want to mark this feed as read?</p>
+        </hgroup>
+      </section>
 
       <div className={'row disable-mobile'}>
         <a href={`/feeds/subscription/${subscriptionId}`}>

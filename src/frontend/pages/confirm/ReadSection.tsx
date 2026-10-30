@@ -11,11 +11,12 @@ export default function ReadSection({ sectionId }: ReadSectionProps) {
       <Nav active='home' />
     </header>
     <main>
-      <hgroup>
-        <h1>Read?</h1>
-        <p>Are you sure you want to mark this section as read?</p>
-      </hgroup>
-      <hr />
+      <section>
+        <hgroup>
+          <h1>Read?</h1>
+          <p>Are you sure you want to mark this section as read?</p>
+        </hgroup>
+      </section>
 
       <div className={'row disable-mobile'}>
         <a href={`/sections/${sectionId}`}>

@@ -44,7 +44,7 @@ export default function Section({ section, items }: SectionProps) {
       <Nav active={'home'} />
     </header>
     <main>
-      <div role={'group'}>
+      <section role={'group'}>
         <div className={'row'}>
           <div className={'header'}>
             <hgroup>
@@ -59,8 +59,7 @@ export default function Section({ section, items }: SectionProps) {
             <EditIcon />
           </a>
         </div>
-      </div>
-      <hr />
+      </section>
 
       {items.length === 0 && <p>Nothing here yet.</p>}
       {grouped.map((group) => (

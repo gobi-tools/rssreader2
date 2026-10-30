@@ -16,7 +16,7 @@ export default function Home({ sections }: DashboardProps) {
       <Nav active={'home'} />
     </header>
     <main>
-      <div role={'group'}>
+      <section role={'group'}>
         <div className={'row'}>
           <div className={'header'}>
             <hgroup>
@@ -30,8 +30,7 @@ export default function Home({ sections }: DashboardProps) {
           </button>
         </a>
         </div>
-      </div>
-      <hr/>
+      </section>
 
       <ul className={'main-list'}>
         {sections.map((s) => (

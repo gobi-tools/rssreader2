@@ -21,7 +21,12 @@ export default function AddFeed({ url, formError }: AddFeedProps) {
       <Nav active={'feeds'} />
     </header>
     <main>
-      <h1>New feed</h1>
+      <section>
+        <hgroup>
+          <h1>New feed</h1>
+          <p>Add details</p>
+        </hgroup>
+      </section>
 
       {formError && <p className="error">{formError}</p>}
       <form method="post" action="/feeds" onSubmit={() => setBusy(true)}>
@@ -37,7 +42,7 @@ export default function AddFeed({ url, formError }: AddFeedProps) {
           />
         </label>
         <button type={'submit'} disabled={busy} aria-busy={busy}>
-          <PlusIcon/>
+          <PlusIcon />
           <span>Add</span>
         </button>
       </form>

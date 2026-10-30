@@ -34,7 +34,14 @@ export default function AddSection({
       <Nav active={'home'} />
     </header>
     <main>
-      <h1>{heading}</h1>
+
+      <section>
+        <hgroup>
+          <h1>{heading}</h1>
+          <p>{isEditing ? 'Update details' : 'Add details'}</p>
+        </hgroup>
+      </section>
+
       {formError && <p className="error">{formError}</p>}
 
       <form method='post' action={action}>

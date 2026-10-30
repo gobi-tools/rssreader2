@@ -11,11 +11,12 @@ export default function DeleteSection({ sectionId }: DeleteSectionProps) {
       <Nav active='home' />
     </header>
     <main>
-      <hgroup>
-        <h1>Delete?</h1>
-        <p>Are you sure you want to delete this?</p>
-      </hgroup>
-      <hr />
+      <section>
+        <hgroup>
+          <h1>Delete?</h1>
+          <p>Are you sure you want to delete this?</p>
+        </hgroup>
+      </section>
 
       <div className={'row disable-mobile'}>
         <a href={`/sections/${sectionId}`}>
