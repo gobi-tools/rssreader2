@@ -1,0 +1,50 @@
+:root {
+ /* -code applis to "kbd", "code", "var", "mark"  */
+  --border-radius-code: 6px;
+
+  /* -blocks applies to to: "blockquote", "pre", "dialog" */
+  --border-radius-blocks: 4px;
+  --border-width-blocks: 2px 2px 5px 2px;
+  --border-style-blocks: solid;
+
+  /* -note applies to: "fieldsets", "article"  */
+  --border-radius-card: 4px;
+  --border-width-card: 2px 2px 5px 2px;
+
+  /* -button applies to: "button" (& "grouped" buttons), inputs, etc */
+  --height-control: 43px;
+  --border-radius-control-button: 4px;
+  --border-radius-control-input: 4px;
+  --border-width-control: 2px 2px 5px 2px;
+}
+
+:root {
+  /* --color-text: light-dark(#0c0c0c, #efefef);
+  --color-base: light-dark(#858585, #747990);
+  --color-primary: light-dark(#1465e9, #2d77ed);
+  --color-secondary: #238cd1;
+
+  --color-success: #23b157;
+  --color-error: #ef4444; */
+}
+
+:is(button, [role=button], input[type=submit], input[type=button]) {
+  border-color: var(--color-control-dark-1) !important;
+}
+
+:is(button, [role=button], input[type=submit], input[type=reset], input[type=button]):focus-visible {
+  border-color: var(--color-outline-dark-1) !important;
+}
+
+[type="checkbox"][role="switch"] {
+  border-width: 2px;
+}
+
+pre>code {
+  border: none;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}

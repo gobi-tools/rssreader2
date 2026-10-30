@@ -6,6 +6,7 @@ export default function Document({ children, title }: { children: any; title?: s
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="color-scheme" content="light dark" />
       <link rel="stylesheet" href="/res/theme.default.min.css"></link>
+      <link rel="stylesheet" href="/res/theme.reader.css"></link>
       <link rel="stylesheet" href="/res/custom.css"></link>
     </head>
     <body>
