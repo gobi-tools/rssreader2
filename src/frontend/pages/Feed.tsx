@@ -1,7 +1,7 @@
 import { useState } from "preact/hooks";
 import Nav from "../common/Nav.js";
-import { formatDate, getYear } from "../utills/utils.js";
-import { EditIcon, TrashIcon } from "../common/Icons.js";
+import { groupByDate } from "../utills/utils.js";
+import { EditIcon } from "../common/Icons.js";
 
 export type ItemProp = {
   id: string;
@@ -39,7 +39,7 @@ export default function Feed({ feed, items }: FeedProps) {
   const [opened, setOpened] = useState<string[]>([]);
   const open = (id: string) => setOpened((ids) => [...ids, id]);
 
-  const details = addDetails(items);
+  const grouped = groupByDate(items);
 
   return <>
     <header>
@@ -64,51 +64,34 @@ export default function Feed({ feed, items }: FeedProps) {
       <hr />
 
       {items.length === 0 && <p>Nothing here yet.</p>}
-      <ul className={'main-list'}>
-        {details.map((current, index) => {
-          const title = current.title ?? current.url;
-          const read = current.read || opened.includes(current.id);
+      {grouped.map((group) => (
+        <section key={group.label}>
+          <h2>{group.label}</h2>
 
-          const previous = details?.[index - 1];
+          <ul className={'main-list'}>
+            {group.items.map((i) => {
+              const title = i.title ?? i.url;
+              const read = i.read || opened.includes(i.id);
 
-          const showYear = index > 0 && previous.year !== current.year;
-
-          return (
-            <li>
-              <div className={`row disable-mobile ${index === items.length - 1 ? 'border-bottom' : ''}`} key={current.id}>
-                <div className="col one-line">
-                  <a
-                    href={`/items/${current.id}/open`}
-                    target={'_blank'}
-                    rel={'noopener'}
-                    onClick={() => open(current.id)}
-                    onAuxClick={() => open(current.id)}>
-                    {read ? <span>{title}</span> : <strong>{title}</strong>}
-                  </a>
-                </div>
-                <div className={'col-2 text-light align-right'}>
-                  {current.day}
-                </div>
-              </div>
-              {showYear &&
-                <div class={'row'}>
-                  <div class={'column year-separator'}>
-                    {current.year}
+              return (
+                <li key={i.id} className={'row padding-bottom-on-mobile'}>
+                  <div>
+                    <a
+                      href={`/items/${i.id}/open`}
+                      target={'_blank'}
+                      rel={'noopener'}
+                      onClick={() => open(i.id)}
+                      onAuxClick={() => open(i.id)}>
+                      {read && <span className={'read'}>{title}</span>}
+                      {!read && <span>{title}</span>}
+                    </a>
                   </div>
-                </div>
-              }
-            </li>
-          )
-        })}
-      </ul>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+      ))}
     </main>
   </>
-}
-
-function addDetails(items: ItemProp[]): DetailedItem[] {
-  return items.map((i) => ({
-    ...i,
-    day: formatDate(i.date),
-    year: getYear(i.date),
-  }))
 }

@@ -11,22 +11,16 @@
   text-align: right;
 }
 
-.year-separator {
-  text-align: center;
-  padding-block: var(--space-m);
-  color: var(--color-control);
-}
-
 .text-light {
   color: var(--color-control);
 }
 
-.one-line {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.read {
+  opacity: 65%;
 }
 
-.read {
-  color: var(--color-text);
+@container(max-width: 600px) {
+  .padding-bottom-on-mobile {
+    padding-bottom: var(--space-m);
+  }
 }
