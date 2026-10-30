@@ -51,7 +51,7 @@ export default function Feed({ feed, items }: FeedProps) {
           <div>
             <hgroup>
               <h1>{feed.title}</h1>
-              <a href={feed.siteUrl} target={'_blank'}>{feed.siteUrl}</a>
+              <a className={'word-break'} href={feed.siteUrl} target={'_blank'}>{feed.siteUrl}</a>
             </hgroup>
           </div>
           <a role={'button'} href={`/feeds/subscription/${feed.subscriptionId}/read`}>

@@ -19,6 +19,10 @@
   opacity: 65%;
 }
 
+.word-break {
+  word-break: break-all;
+}
+
 @container(max-width: 600px) {
   .padding-bottom-on-mobile {
     padding-bottom: var(--space-m);
