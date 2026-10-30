@@ -27,6 +27,19 @@
   margin-bottom: 0;
 }
 
+.button-small {
+  width: var(--height-small-code) !important;
+  height: var(--height-small-code);
+  min-height: var(--height-small-code);
+
+  &>svg:only-child {
+    width: calc(var(--height-small-code) / 2);
+    height: calc(var(--height-small-code) / 2);
+    min-width: calc(var(--height-small-code) / 2);
+    min-height: calc(var(--height-small-code) / 2);
+  }
+}
+
 @container(max-width: 600px) {
   .padding-bottom-on-mobile {
     padding-bottom: var(--space-m);

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
 import Nav from "../common/Nav.js";
-import { PlusIcon } from "../common/Icons.js";
 
 export type AddFeedProps = {
   url?: string;
@@ -42,7 +41,6 @@ export default function AddFeed({ url, formError }: AddFeedProps) {
           />
         </label>
         <button type={'submit'} disabled={busy} aria-busy={busy}>
-          <PlusIcon />
           <span>Add</span>
         </button>
       </form>

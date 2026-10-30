@@ -52,10 +52,10 @@ export default function Section({ section, items }: SectionProps) {
               <p>{items.length} articles</p>
             </hgroup>
           </div>
-          <a href={`/sections/${section.id}/read`} role={'button'}>
+          <a href={`/sections/${section.id}/read`} role={'button'} className={'button-small'}>
             <OKIcon />
           </a>
-          <a href={`/sections/${section.id}/edit`} role={'button'}>
+          <a href={`/sections/${section.id}/edit`} role={'button'} className={'button-small'}>
             <EditIcon />
           </a>
         </div>

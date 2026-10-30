@@ -25,7 +25,7 @@ export default function Home({ sections }: DashboardProps) {
             </hgroup>
           </div>
         <a href="/sections/new">
-          <button class={'success'}>
+          <button class={'success button-small'}>
             <PlusIcon/>
           </button>
         </a>

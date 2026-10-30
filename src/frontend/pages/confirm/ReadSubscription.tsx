@@ -1,4 +1,3 @@
-import { OKIcon } from "../../common/Icons.js";
 import Nav from "../../common/Nav.js";
 
 export type ReadSubscriptionProps = {
@@ -27,7 +26,6 @@ export default function ReadSubscription({ subscriptionId }: ReadSubscriptionPro
           method={'post'}
           action={`/feeds/subscription/${subscriptionId}/read`}>
           <button type={'submit'}>
-            <OKIcon />
             <span>Read all</span>
           </button>
         </form>

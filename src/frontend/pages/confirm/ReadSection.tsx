@@ -1,4 +1,3 @@
-import { OKIcon } from "../../common/Icons.js";
 import Nav from "../../common/Nav.js";
 
 export type ReadSectionProps = {
@@ -27,7 +26,6 @@ export default function ReadSection({ sectionId }: ReadSectionProps) {
           method={'post'}
           action={`/sections/${sectionId}/read`}>
           <button type={'submit'}>
-            <OKIcon />
             <span>Read all</span>
           </button>
         </form>

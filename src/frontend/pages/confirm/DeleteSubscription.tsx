@@ -1,4 +1,3 @@
-import { TrashIcon } from "../../common/Icons.js";
 import Nav from "../../common/Nav.js";
 
 export type DeleteSubscriptionProps = {
@@ -27,7 +26,6 @@ export default function DeleteSubscription({ subscriptionId }: DeleteSubscriptio
           method={'post'}
           action={`/feeds/subscription/${subscriptionId}/delete`}>
           <button className={'error'} type={'submit'}>
-            <TrashIcon />
             <span>Delete</span>
           </button>
         </form>

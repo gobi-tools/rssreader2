@@ -27,7 +27,7 @@ export default function Feeds({ feeds }: FeedsProps) {
             </hgroup>
           </div>
           <a href="/feeds/new">
-            <button className={'success'}>
+            <button className={'success button-small'}>
               <PlusIcon />
             </button>
           </a>

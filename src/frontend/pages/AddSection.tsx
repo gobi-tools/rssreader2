@@ -1,4 +1,3 @@
-import { PlusIcon, TrashIcon, UpdateIcon } from "../common/Icons.js";
 import Nav from "../common/Nav.js";
 
 export type SectionFeedProp = {
@@ -69,13 +68,12 @@ export default function AddSection({
 
         <div className={'row disable-mobile'}>
           <button type={'submit'}>
-            {!isEditing && <><PlusIcon /><span>Add</span></>}
-            {isEditing && <><UpdateIcon /><span>Update</span></>}
+            {!isEditing && <><span>Add</span></>}
+            {isEditing && <><span>Update</span></>}
           </button>
           <div></div>
           {isEditing &&
             <a href={`/sections/${id}/delete`} role={'button'} class={'error'}>
-              <TrashIcon />
               <span>Delete</span>
             </a>
           }

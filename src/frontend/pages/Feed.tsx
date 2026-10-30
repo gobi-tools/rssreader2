@@ -54,10 +54,10 @@ export default function Feed({ feed, items }: FeedProps) {
               <a className={'word-break'} href={feed.siteUrl} target={'_blank'}>{feed.siteUrl}</a>
             </hgroup>
           </div>
-          <a role={'button'} href={`/feeds/subscription/${feed.subscriptionId}/read`}>
+          <a role={'button'} className={'button-small'} href={`/feeds/subscription/${feed.subscriptionId}/read`}>
             <OKIcon/>
           </a>
-          <a role={'button'} class={'error'} href={`/feeds/subscription/${feed.subscriptionId}/delete`}>
+          <a role={'button'} className={'error button-small'} href={`/feeds/subscription/${feed.subscriptionId}/delete`}>
             <TrashIcon/>
           </a>
         </div>

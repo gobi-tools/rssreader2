@@ -1,4 +1,3 @@
-import { TrashIcon } from "../../common/Icons.js";
 import Nav from "../../common/Nav.js";
 
 export type DeleteSectionProps = {
@@ -27,7 +26,6 @@ export default function DeleteSection({ sectionId }: DeleteSectionProps) {
           method={'post'}
           action={`/sections/${sectionId}/delete`}>
           <button className={'error'} type={'submit'}>
-            <TrashIcon />
             <span>Delete</span>
           </button>
         </form>
