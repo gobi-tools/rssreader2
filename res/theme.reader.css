@@ -29,12 +29,3 @@
 [type="checkbox"][role="switch"] {
   border-width: 2px;
 }
-
-pre>code {
-  border: none;
-}
-
-.table-wrapper {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
