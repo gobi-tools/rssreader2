@@ -49,3 +49,16 @@ export function markItemsInSectionAsRead(userId: string, sectionId: string) {
     .where(eq(sectionFeed.sectionId, sectionId));
   return db.insert(itemRead).select(items).onConflictDoNothing().run().changes;
 }
+
+export function markItemsInSubsctiptionAsRead(userId: string, subscriptionId: string) {
+  const items = db 
+    .select({
+      userId: sql<string>`${userId}`.as("user_id"),
+      itemId: item.id,
+      readAt: sql<Date>`${Date.now()}`.as("read_at")
+    })
+    .from(subscription)
+    .innerJoin(item, eq(item.feedId, subscription.feedId))
+    .where(eq(subscription.id, subscriptionId));
+  return db.insert(itemRead).select(items).onConflictDoNothing().run().changes;
+}

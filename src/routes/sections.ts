@@ -7,8 +7,8 @@ import { createSection, deleteSection, getSection, SectionError, updateSection }
 import { error } from "console";
 import { listSectionItems, markItemsInSectionAsRead } from "../items.js";
 import Section from "../frontend/pages/Section.js";
-import DeleteSection from "../frontend/pages/DeleteSection.js";
-import ReadSection from "../frontend/pages/ReadSection.js";
+import DeleteSection from "../frontend/pages/confirm/DeleteSection.js";
+import ReadSection from "../frontend/pages/confirm/ReadSection.js";
 
 async function readForm(c: Context) {
   const body = await c.req.parseBody({ all: true });

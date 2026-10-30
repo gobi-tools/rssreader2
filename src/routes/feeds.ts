@@ -5,7 +5,9 @@ import r from '../frontend/react-srv.js';
 import Feeds from "../frontend/pages/Feeds.js";
 import AddFeed from "../frontend/pages/AddFeed.js";
 import Feed from "../frontend/pages/Feed.js";
-import DeleteSubsctiption from "../frontend/pages/DeleteSubscription.js";
+import DeleteSubsctiption from "../frontend/pages/confirm/DeleteSubscription.js";
+import ReadSubscription from "../frontend/pages/confirm/ReadSubscription.js";
+import { markItemsInSubsctiptionAsRead } from "../items.js";
 
 export const feedsRoutes = new Hono<AuthedEnv>()
   .get("/", requireAuth, async (c) => {
@@ -45,7 +47,18 @@ export const feedsRoutes = new Hono<AuthedEnv>()
     };
     return c.html(r.render(Feed, props));
   })
-  .get("/subscription/:subscriptionId/delete/confirm", requireAuth, (c) => {
+  .get("/subscription/:subscriptionId/read", requireAuth, (c) => {
+    const subscriptionId = c.req.param("subscriptionId");
+    return c.html(r.render(ReadSubscription, { subscriptionId }));
+  })
+  .post("/subscription/:subscriptionId/read", requireAuth, (c) => {
+    const subscriptionId = c.req.param("subscriptionId");
+    const found = getSubscribedFeed(subscriptionId, c.var.user.id);
+    if (!found) return c.notFound();
+    markItemsInSubsctiptionAsRead(c.var.user.id, subscriptionId);
+    return c.redirect(`/feeds/subscription/${subscriptionId}`)
+  })
+  .get("/subscription/:subscriptionId/delete", requireAuth, (c) => {
     const subscriptionId = c.req.param("subscriptionId");
     return c.html(r.render(DeleteSubsctiption, { subscriptionId })); 
   })

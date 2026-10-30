@@ -1,14 +1,14 @@
-import { TrashIcon } from "../common/Icons.js";
-import Nav from "../common/Nav.js";
+import { TrashIcon } from "../../common/Icons.js";
+import Nav from "../../common/Nav.js";
 
-export type DeleteSectionProps = {
-  sectionId: string;
+export type DeleteSubscriptionProps = {
+  subscriptionId: string;
 }
 
-export default function DeleteSection({ sectionId }: DeleteSectionProps) {
+export default function DeleteSubscription({ subscriptionId }: DeleteSubscriptionProps) {
   return <>
     <header>
-      <Nav active='home' />
+      <Nav active='feeds' />
     </header>
     <main>
       <hgroup>
@@ -18,19 +18,21 @@ export default function DeleteSection({ sectionId }: DeleteSectionProps) {
       <hr />
 
       <div className={'row disable-mobile'}>
-        <a href={`/sections/${sectionId}`}>
+        <a href={`/feeds/subscription/${subscriptionId}`}>
           <button type={'reset'}>Cancel</button>
         </a>
         <div></div>
         <form
           method={'post'}
-          action={`/sections/${sectionId}/delete`}>
+          action={`/feeds/subscription/${subscriptionId}/delete`}>
           <button className={'error'} type={'submit'}>
             <TrashIcon />
             <span>Delete</span>
           </button>
         </form>
       </div>
+
+
     </main>
   </>
 }

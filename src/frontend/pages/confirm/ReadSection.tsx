@@ -1,5 +1,5 @@
-import { OKIcon } from "../common/Icons.js";
-import Nav from "../common/Nav.js";
+import { OKIcon } from "../../common/Icons.js";
+import Nav from "../../common/Nav.js";
 
 export type ReadSectionProps = {
   sectionId: string;
@@ -13,7 +13,7 @@ export default function ReadSection({ sectionId }: ReadSectionProps) {
     <main>
       <hgroup>
         <h1>Read?</h1>
-        <p>Are you sure you want to mark this as read?</p>
+        <p>Are you sure you want to mark this section as read?</p>
       </hgroup>
       <hr />
 
