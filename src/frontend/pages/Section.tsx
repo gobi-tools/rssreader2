@@ -46,7 +46,7 @@ export default function Section({ section, items }: SectionProps) {
     <main>
       <div role={'group'}>
         <div className={'row'}>
-          <div>
+          <div className={'header'}>
             <hgroup>
               <h1>{section.name}</h1>
               <p>{items.length} articles</p>

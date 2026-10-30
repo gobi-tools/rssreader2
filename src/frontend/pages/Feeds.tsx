@@ -20,7 +20,7 @@ export default function Feeds({ feeds }: FeedsProps) {
     <main>
       <div role={"group"}>
         <div className={"row"}>
-          <div>
+          <div class={'header'}>
             <hgroup>
               <h1>Feeds</h1>
               <span>{feeds.length} Feeds</span>

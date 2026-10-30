@@ -31,7 +31,7 @@ export default function AddSection({
 ) {
   return <>
     <header>
-      <Nav active={'feeds'} />
+      <Nav active={'home'} />
     </header>
     <main>
       <h1>{heading}</h1>

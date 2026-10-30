@@ -13,7 +13,7 @@ export default function Profile({ email }: ProfileProps) {
     <main>
       <div role={'group'}>
         <div className={'row'}>
-          <div>
+          <div class={'header'}>
             <hgroup>
               <h1>Profile</h1>
               <p>Welcome back, {email}</p>

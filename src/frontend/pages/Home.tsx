@@ -18,7 +18,7 @@ export default function Home({ sections }: DashboardProps) {
     <main>
       <div role={'group'}>
         <div className={'row'}>
-          <div>
+          <div className={'header'}>
             <hgroup>
               <h1>Home</h1>
               <span>{sections.length} Newsletters</span>

@@ -48,7 +48,7 @@ export default function Feed({ feed, items }: FeedProps) {
     <main>
       <div role={'group'}>
         <div className={'row'}>
-          <div>
+          <div className={'header'}>
             <hgroup>
               <h1>{feed.title}</h1>
               <a className={'word-break'} href={feed.siteUrl} target={'_blank'}>{feed.siteUrl}</a>
