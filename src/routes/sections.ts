@@ -5,9 +5,10 @@ import r from '../frontend/react-srv.js';
 import AddSection from "../frontend/pages/AddSection.js";
 import { createSection, deleteSection, getSection, SectionError, updateSection } from "../sections.js";
 import { error } from "console";
-import { listSectionItems } from "../items.js";
+import { listSectionItems, markItemsInSectionAsRead } from "../items.js";
 import Section from "../frontend/pages/Section.js";
 import DeleteSection from "../frontend/pages/DeleteSection.js";
+import ReadSection from "../frontend/pages/ReadSection.js";
 
 async function readForm(c: Context) {
   const body = await c.req.parseBody({ all: true });
@@ -87,6 +88,16 @@ export const sectionsRoutes = new Hono<AuthedEnv>()
   .post("/:id/delete", requireAuth, (c) => {
     if (!deleteSection(c.var.user.id, c.req.param("id"))) return c.notFound();
     return c.redirect("/home");
+  })
+  .get("/:id/read", requireAuth, (c) => {
+    const sectionId = c.req.param("id");
+    return c.html(r.render(ReadSection, { sectionId }));
+  })
+  .post("/:id/read", requireAuth, (c) => {
+    const found = getSection(c.var.user.id, c.req.param("id"));
+    if (!found) return c.notFound();
+    markItemsInSectionAsRead(c.var.user.id, found.id);
+    return  c.redirect(`/sections/${found.id}`);
   })
   // the reading view
   .get("/:id", requireAuth, (c) => {

@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 import Nav from "../common/Nav.js";
 import { groupByDate } from '../utills/utils.js';
-import { EditIcon } from '../common/Icons.js';
+import { EditIcon, OKIcon } from '../common/Icons.js';
 
 export type SectionProp = {
   id: string;
@@ -38,7 +38,7 @@ export default function Section({ section, items }: SectionProps) {
   const open = (id: string) => setOpened((ids) => [...ids, id]);
 
   const grouped = groupByDate(items);
-  
+
   return <>
     <header>
       <Nav active={'home'} />
@@ -52,10 +52,11 @@ export default function Section({ section, items }: SectionProps) {
               <p>{items.length} articles</p>
             </hgroup>
           </div>
-          <a href={`/sections/${section.id}/edit`}>
-            <button>
-              <EditIcon />
-            </button>
+          <a href={`/sections/${section.id}/read`} role={'button'}>
+            <OKIcon />
+          </a>
+          <a href={`/sections/${section.id}/edit`} role={'button'}>
+            <EditIcon />
           </a>
         </div>
       </div>

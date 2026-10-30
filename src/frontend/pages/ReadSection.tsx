@@ -1,0 +1,36 @@
+import { OKIcon } from "../common/Icons.js";
+import Nav from "../common/Nav.js";
+
+export type ReadSectionProps = {
+  sectionId: string;
+}
+
+export default function ReadSection({ sectionId }: ReadSectionProps) {
+  return <>
+    <header>
+      <Nav active='home' />
+    </header>
+    <main>
+      <hgroup>
+        <h1>Read?</h1>
+        <p>Are you sure you want to mark this as read?</p>
+      </hgroup>
+      <hr />
+
+      <div className={'row disable-mobile'}>
+        <a href={`/sections/${sectionId}`}>
+          <button type={'reset'}>Cancel</button>
+        </a>
+        <div></div>
+        <form
+          method={'post'}
+          action={`/sections/${sectionId}/read`}>
+          <button type={'submit'}>
+            <OKIcon />
+            <span>Read all</span>
+          </button>
+        </form>
+      </div>
+    </main>
+  </>
+}

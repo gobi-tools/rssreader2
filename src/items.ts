@@ -1,5 +1,5 @@
 import { desc, sql, eq, and } from "drizzle-orm";
-import { feed, item, itemRead, sectionFeed, subscription } from "./db/feeds-schema.js";
+import { feed, item, itemRead, section, sectionFeed, subscription } from "./db/feeds-schema.js";
 import { db } from "./db/index.js";
 
 export function listSectionItems(userId: string, sectionId: string, limit = 100) {
@@ -34,4 +34,18 @@ export function openItem(userId: string, itemId: string) {
   if (!row) return null;
   db.insert(itemRead).values({ userId, itemId }).onConflictDoNothing().run();
   return row.url;
+}
+
+export function markItemsInSectionAsRead(userId: string, sectionId: string) {
+  const items = db 
+    .select({
+      userId: sql<string>`${userId}`.as("user_id"),
+      itemId: item.id,
+      readAt: sql<Date>`${Date.now()}`.as("read_at")
+    })
+    .from(sectionFeed)
+    .innerJoin(subscription, eq(subscription.id, sectionFeed.subscriptionId))
+    .innerJoin(item, eq(item.feedId, subscription.feedId))
+    .where(eq(sectionFeed.sectionId, sectionId));
+  return db.insert(itemRead).select(items).onConflictDoNothing().run().changes;
 }
