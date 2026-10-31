@@ -87,7 +87,7 @@ export default function Section({ section, items }: SectionProps) {
                       {i.feedTitle}
                     </span>
                   </div>
-                  <div className={'col-3 text-light hide-on-mobile align-right'}>
+                  <div className={'col-3 text-light hide-on-mobile align-right no-wrap'}>
                     {i.feedTitle}
                   </div>
                 </li>

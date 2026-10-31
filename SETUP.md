@@ -30,6 +30,16 @@ Copy files:
 scp -r /path/to/your/project your_username@your_hetzner_ip:/path/to/destination/
 ```
 
+Unzip correctly:
+----------------
+
+If I want to preserve the `.sqlite` database 
+I must unzip like this: 
+
+```bash
+unzip rssreader2.zip -d /path/to/destination/
+```
+
 Run project remotely
 --------------------
 
