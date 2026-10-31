@@ -1,0 +1,1 @@
+CREATE INDEX `section_feed_subscriptionId_idx` ON `section_feed` (`subscription_id`);

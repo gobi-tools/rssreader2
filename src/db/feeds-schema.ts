@@ -78,7 +78,12 @@ export const sectionFeed = sqliteTable("section_feed", {
   sectionId: sectionId(),
   subscriptionId: subscriptionid(),
 },
-  (table) => [primaryKey({ columns: [table.sectionId, table.subscriptionId] })],
+  (table) => [
+    primaryKey({ columns: [table.sectionId, table.subscriptionId] }),
+    // lets listFeeds' "is this subscription in any section?" check seek by
+    // subscription_id (the PK leads with section_id, so it can't serve it)
+    index("section_feed_subscriptionId_idx").on(table.subscriptionId),
+  ],
 );
 
 export const item = sqliteTable("item", {

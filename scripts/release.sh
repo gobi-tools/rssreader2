@@ -29,12 +29,13 @@ fi
 # Files/folders the server needs:
 #   - Docker builds happen ON the server (docker compose up --build), so the
 #     full source is required: src/, res/, tsconfig, package manifests.
-#   - drizzle/ holds the migrations, reverse-proxy/ holds the nginx setup.
+#   - drizzle/ holds the migrations, reverse-proxy/ holds the nginx setup,
+#     scripts/ holds the runtime migration runner the image ships.
 #   - .env carries BETTER_AUTH_URL/SECRET for compose's env_file.
 # Deliberately NOT included (regenerated on the server, or must never ship):
 #   - node_modules, dist, public  (build artifacts)
 #   - data                        (production database — never overwrite it)
-#   - .git, scripts               (not needed to run the app)
+#   - .git                        (not needed to run the app)
 # ---------------------------------------------------------------------------
 PATHS=(
   Dockerfile
@@ -48,6 +49,7 @@ PATHS=(
   res
   drizzle
   reverse-proxy
+  scripts
 )
 
 # The server needs .env (compose env_file); ship it so setup stays one step.

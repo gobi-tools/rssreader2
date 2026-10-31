@@ -35,6 +35,10 @@ COPY --from=build /app/public ./public
 # compute the hashed hydration script filenames (e.g. Home.<hash>.js)
 COPY --from=build /app/src ./src
 COPY drizzle ./drizzle
+# Migration runner (drizzle-kit is a devDependency, so the image ships
+# its own runner built on drizzle-orm). Not run automatically — invoke
+# manually: docker compose exec app node scripts/migrate.mjs
+COPY scripts ./scripts
 
 # The sqlite database is expected at /app/data (bind-mounted from the host)
 ENV DATABASE_URL=/app/data/app.sqlite

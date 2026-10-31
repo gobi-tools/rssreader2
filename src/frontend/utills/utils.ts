@@ -64,5 +64,9 @@ function getMonday(date: Date): Date {
 // -------------------------------
 
 export function getHostname(url: string) {
-  return new URL(url).hostname
+  try {
+    return new URL(url).hostname
+  } catch (e) {
+    return url;
+  }
 }

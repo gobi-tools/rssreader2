@@ -1,6 +1,6 @@
 import { parseFeed, type AnyFeed } from "feedsmith";
 import { db } from "./db/index.js";
-import { feed, item, itemRead, subscription } from "./db/feeds-schema.js";
+import { feed, item, itemRead, sectionFeed, subscription } from "./db/feeds-schema.js";
 import { eq, asc, and, sql, desc } from "drizzle-orm";
 
 // -------------------------------
@@ -225,6 +225,11 @@ export function listFeeds(userId: string) {
       title: feed.title,
       url: feed.url,
       siteUrl: feed.siteUrl,
+      // true when this subscription sits in no section at all
+      isOrphan: sql<boolean>`not exists (
+        select 1 from ${sectionFeed}
+        where ${sectionFeed.subscriptionId} = ${subscription.id}
+      )`.mapWith(Boolean),
     })
     .from(subscription)
     .innerJoin(feed, eq(feed.id, subscription.feedId))

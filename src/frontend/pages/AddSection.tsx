@@ -6,6 +6,7 @@ export type SectionFeedProp = {
   title: string | null;
   url: string;
   siteUrl: string | null;
+  isOrphan: boolean;
 };
 
 export type AddSectionProps = {
@@ -63,7 +64,7 @@ export default function AddSection({
                 name={"subscriptionIds"}
                 value={f.subscriptionId}
                 defaultChecked={checked?.includes(f.subscriptionId)} />
-              {f.title ?? f.url} <span className={'text-light'}>({getHostname(f.siteUrl ?? f.url)})</span>
+              <span className={`${f.isOrphan === true ? 'success' : ''}`}>{f.title ?? f.url}</span> <span className={'text-light'}>({getHostname(f.url)})</span>
             </label>
           ))}
         </fieldset>

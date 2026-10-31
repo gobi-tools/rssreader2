@@ -70,9 +70,30 @@ cd rssreader2-<name>
 # data/ is a bind mount, not a named volume, so `-v` can't touch it
 docker-compose -f docker-compose.prod.yml down
 
-# run the app
+# run the app (the first build takes several minutes)
 docker-compose -f docker-compose.prod.yml up --build --remove-orphans -d
 ```
+
+The server builds everything itself: `npm ci` downloads the dependencies
+and `tsc`/`react-srv` compile the app **inside the Docker image**. There is
+no `node_modules/` or `dist/` in the project folder — check inside the
+container with:
+
+```bash
+docker-compose -f docker-compose.prod.yml exec app ls /app
+```
+
+To watch (or force) the full build — e.g. when it seems to finish too
+fast, which means Docker reused its layer cache:
+
+```bash
+docker-compose -f docker-compose.prod.yml build --no-cache app
+```
+
+If the build prints almost nothing, check which compose you have:
+`docker-compose version` is the legacy v1 — prefer the v2 plugin
+(`docker compose version`, package `docker-compose-v2` or
+`docker-compose-plugin`).
 
 
 Notes:
@@ -82,6 +103,9 @@ Notes:
   (`http://<server-ip>`); the app container publishes no host port.
 - `BETTER_AUTH_URL` in `docker-compose.prod.yml` must match the public
   URL you use to reach the app (e.g. `http://116.203.52.35`).
-- Migrations are not run automatically at startup. If you change the
-  drizzle schema, apply migrations on the server yourself before
-  restarting the container.
+- Migrations are not run automatically at startup. After a release that
+  changes the schema, apply them on the server:
+
+  ```bash
+  docker-compose -f docker-compose.prod.yml exec app node scripts/migrate.mjs
+  ```
