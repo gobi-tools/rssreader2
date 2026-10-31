@@ -1,4 +1,15 @@
 services:
+  proxy:
+    container_name: proxy
+    build:
+      context: ./reverse-proxy
+      dockerfile: 'Dockerfile'
+    ports:
+      - 80:80
+    restart: always
+    depends_on:
+      - app
+
   app:
     build:
       context: .
@@ -6,15 +17,15 @@ services:
     image: rssreader2:prod
     container_name: rssreader2
     restart: unless-stopped
-    ports:
-      - "${APP_PORT:-3000}:3000"
+    # No host port mapping — the app is only reachable through the
+    # reverse proxy (nginx on port 80), so it can't be bypassed.
     env_file:
       - .env
     environment:
       NODE_ENV: production
       PORT: "3000"
       DATABASE_URL: /app/data/app.sqlite
-      BETTER_AUTH_URL: https://http://116.203.52.35
+      BETTER_AUTH_URL: http://116.203.52.35
     volumes:
       # Bind mount to the host ./data folder — `docker-compose down -v` will
       # NEVER delete this. Back up this folder to back up your database.
