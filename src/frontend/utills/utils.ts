@@ -58,3 +58,11 @@ function getMonday(date: Date): Date {
     )
   )
 }
+
+// -------------------------------
+// URL
+// -------------------------------
+
+export function getHostname(url: string) {
+  return new URL(url).hostname
+}

@@ -150,3 +150,6 @@ vite.config.ts.timestamp-*
 
 # don't push .sqlite database
 data
+
+# release archives
+release

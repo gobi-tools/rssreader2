@@ -224,6 +224,7 @@ export function listFeeds(userId: string) {
       subscriptionId: subscription.id,
       title: feed.title,
       url: feed.url,
+      siteUrl: feed.siteUrl,
     })
     .from(subscription)
     .innerJoin(feed, eq(feed.id, subscription.feedId))

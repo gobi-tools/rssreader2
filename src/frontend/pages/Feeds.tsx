@@ -1,10 +1,12 @@
 import { PlusIcon } from "../common/Icons.js";
 import Nav from "../common/Nav.js";
+import { getHostname } from "../utills/utils.js";
 
 export type FeedItemProp = {
   id: String;
   title: string | null;
   url: string;
+  siteUrl: string | null;
   subscriptionId: string;
 };
 
@@ -36,8 +38,13 @@ export default function Feeds({ feeds }: FeedsProps) {
 
       <ul className={'main-list'}>
         {feeds.map((f) => (
-          <li key={f.subscriptionId}>
-            <a href={`/feeds/subscription/${f.subscriptionId}`}>{f.title ?? f.url}</a>
+          <li key={f.subscriptionId} className={'row'}>
+            <div>
+              <a href={`/feeds/subscription/${f.subscriptionId}`}>{f.title ?? f.url}</a>
+            </div>
+            <div className={'col-5 text-light hide-on-mobile align-right no-wrap'}>
+              {getHostname(f.siteUrl ?? f.url)}
+            </div>
           </li>
         ))}
       </ul>

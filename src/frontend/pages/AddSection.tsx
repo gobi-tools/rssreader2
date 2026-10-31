@@ -1,9 +1,11 @@
 import Nav from "../common/Nav.js";
+import { getHostname } from "../utills/utils.js";
 
 export type SectionFeedProp = {
   subscriptionId: string;
   title: string | null;
   url: string;
+  siteUrl: string | null;
 };
 
 export type AddSectionProps = {
@@ -61,7 +63,7 @@ export default function AddSection({
                 name={"subscriptionIds"}
                 value={f.subscriptionId}
                 defaultChecked={checked?.includes(f.subscriptionId)} />
-              {f.title ?? f.url}
+              {f.title ?? f.url} <span className={'text-light'}>({getHostname(f.siteUrl ?? f.url)})</span>
             </label>
           ))}
         </fieldset>
