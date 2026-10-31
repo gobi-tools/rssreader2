@@ -1,0 +1,21 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: rssreader2:prod
+    container_name: rssreader2
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      DATABASE_URL: /app/data/app.sqlite
+      BETTER_AUTH_URL: https://http://116.203.52.35
+    volumes:
+      # Bind mount to the host ./data folder — `docker-compose down -v` will
+      # NEVER delete this. Back up this folder to back up your database.
+      - ./data:/app/data

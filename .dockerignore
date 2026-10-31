@@ -1,0 +1,23 @@
+# Build artifacts (rebuilt inside the image)
+node_modules
+dist
+public
+data
+
+# VCS / IDE
+.git
+.github
+.vscode
+
+# Secrets — passed at runtime via env_file, never baked into the image
+.env
+.env.*
+!.env.example
+
+# Docker files themselves
+Dockerfile
+docker-compose*.yml
+
+# Misc
+*.log
+*.tsbuildinfo
