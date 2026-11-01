@@ -18,11 +18,14 @@ export function pickGrouping(dates: number[]): Grouping {
 export function groupByDate<T extends { date: string }>(items: T[]) {
   const grouping = pickGrouping(items.map((i) => Date.parse(i.date)));
   const groups: { label: string, items: T[] }[] = [];
+  let i = 0;
   for (const item of items) {
     const label = groupLabel(new Date(item.date), grouping);
     const last = groups.at(-1);
-    if (last?.label === label) last.items.push(item);
-    else groups.push({ label, items: [item] });
+    const indexed = { ...item, index: i };
+    if (last?.label === label) last.items.push(indexed);
+    else groups.push({ label, items: [indexed] });
+    i++;
   }
   return groups;
 }

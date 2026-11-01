@@ -15,6 +15,7 @@ export type ItemProp = {
   date: string;
   feedTitle: string | null;
   read: boolean;
+  index: number;
 };
 
 export type SectionProps = {
@@ -74,6 +75,8 @@ export default function Section({ section, items }: SectionProps) {
               return (
                 <li key={i.id} className={'row padding-bottom-on-mobile'}>
                   <div>
+                    <span>{i.index + 1}</span>
+                    <span>&#46; </span>
                     <a
                       href={`/items/${i.id}/open`}
                       target={'_blank'}

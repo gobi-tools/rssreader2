@@ -10,6 +10,7 @@ export type ItemProp = {
   date: string;
   feedTitle: string | null;
   read: boolean;
+  index: number;
 };
 
 export type FeedProp = {
@@ -74,8 +75,10 @@ export default function Feed({ feed, items }: FeedProps) {
               const read = i.read || opened.includes(i.id);
 
               return (
-                <li key={i.id} className={'row padding-bottom-on-mobile'}>
+                <li key={i.id}>
                   <div>
+                    <span>{i.index + 1}</span>
+                    <span>&#46; </span>
                     <a
                       href={`/items/${i.id}/open`}
                       target={'_blank'}
