@@ -64,7 +64,7 @@ export default function AddSection({
                 name={"subscriptionIds"}
                 value={f.subscriptionId}
                 defaultChecked={checked?.includes(f.subscriptionId)} />
-              <span className={`${f.isOrphan === true ? 'success' : ''}`}>{f.title ?? f.url}</span> <span className={'text-light'}>({getHostname(f.url)})</span>
+              <span className={`${f.isOrphan === true ? 'success' : ''}`}>{f.title ?? f.url}</span> <span className={'text-light hide-on-mobile'}>({getHostname(f.url)})</span>
             </label>
           ))}
         </fieldset>
