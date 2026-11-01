@@ -109,5 +109,5 @@ export const sectionsRoutes = new Hono<AuthedEnv>()
       date: date.toISOString(),
       read: readAt !== null,
     }));
-    return c.html(r.render(Section, { section: { id: found.id, name: found.name }, items }));
+    return c.html(r.render(Section, { section: { id: found.id, name: found.name, unread: found.unread }, items }));
   });

@@ -6,6 +6,7 @@ import { EditIcon, OKIcon } from '../common/Icons.js';
 export type SectionProp = {
   id: string;
   name: string;
+  unread: number;
 };
 
 export type ItemProp = {
@@ -50,7 +51,7 @@ export default function Section({ section, items }: SectionProps) {
           <div className={'header'}>
             <hgroup>
               <h1>{section.name}</h1>
-              <p>{items.length} articles</p>
+              <p>{items.length} articles {section.unread > 0 && <span className={'success'}>({section.unread} new)</span>}</p>
             </hgroup>
           </div>
           <a href={`/sections/${section.id}/read`} role={'button'} className={'button-small'}>

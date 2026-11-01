@@ -4,6 +4,7 @@ import Nav from "../common/Nav.js";
 type SectionProp = {
   id: string;
   name: string;
+  unread: number;
 };
 
 type DashboardProps = {
@@ -35,7 +36,7 @@ export default function Home({ sections }: DashboardProps) {
       <ul className={'main-list'}>
         {sections.map((s) => (
           <li key={s.id}>
-            <a href={`/sections/${s.id}`}>{s.name}</a>
+            <a href={`/sections/${s.id}`}>{s.name} {s.unread > 0 && <span className={'success'}>({s.unread} new)</span>}</a>
           </li>
         ))}
       </ul>

@@ -1,14 +1,35 @@
-import { and, asc, eq, inArray, ne } from "drizzle-orm";
-import { section, sectionFeed, subscription } from "./db/feeds-schema.js";
+import { and, asc, eq, inArray, ne, sql } from "drizzle-orm";
+import { item, itemRead, section, sectionFeed, subscription } from "./db/feeds-schema.js";
 import { db } from "./db/index.js";
 
 export class SectionError extends Error {};
 
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
+/**
+ * Scalar subquery: unread items for the section of the current FROM row.
+ * Unread = no item_read row for this user. All lookups are index seeks
+ * (section_feed PK leads with section_id, item_feedId, item_read PK).
+ *
+ * Column names are written as literal text on purpose: drizzle serializes
+ * Column objects interpolated into a sql template WITHOUT their table
+ * qualifier ("id" instead of "subscription"."id"), which is ambiguous as
+ * soon as several joined tables expose the same column name.
+ */
+const unreadCount = (userId: string) => sql<number>`(
+  select count(*)
+  from ${sectionFeed} sf
+  inner join ${subscription} sub on sub.id = sf.subscription_id
+  inner join ${item} i on i.feed_id = sub.feed_id
+  left join ${itemRead} ir on ir.item_id = i.id and ir.user_id = ${userId}
+  where sf.section_id = ${section}.id
+    and sub.user_id = ${userId}
+    and ir.item_id is null
+)`;
+
 export function listSections(userId: string) {
   return db
-    .select({ id: section.id, name: section.name })
+    .select({ id: section.id, name: section.name, unread: unreadCount(userId) })
     .from(section)
     .where(eq(section.userId, userId))
     .orderBy(asc(section.name));
@@ -16,7 +37,13 @@ export function listSections(userId: string) {
 
 export function getSection(userId: string, id: string) {
   const row = db 
-    .select()
+    .select({
+      id: section.id,
+      userId: section.userId,
+      name: section.name,
+      createdAt: section.createdAt,
+      unread: unreadCount(userId),
+    })
     .from(section)
     .where(and(eq(section.id, id), eq(section.userId, userId)))
     .get();

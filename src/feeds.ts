@@ -218,10 +218,13 @@ export async function subscribe(userId: string, url: string) {
 }
 
 export function listFeeds(userId: string) {
-  // true when this subscription sits in no section at all
+  // true when this subscription sits in no section at all.
+  // Column refs are literal text: drizzle drops the table qualifier when
+  // serializing Column objects inside sql templates, which would leave
+  // `id` ambiguous (subscription and feed both have one).
   const isOrphan = sql<boolean>`not exists (
-    select 1 from ${sectionFeed}
-    where ${sectionFeed.subscriptionId} = ${subscription.id}
+    select 1 from ${sectionFeed} sf
+    where sf.subscription_id = ${subscription}.id
   )`;
 
   return db

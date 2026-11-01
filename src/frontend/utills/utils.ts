@@ -68,7 +68,7 @@ function getMonday(date: Date): Date {
 
 export function getHostname(url: string) {
   try {
-    return new URL(url).hostname
+    return new URL(url).hostname.replaceAll('www.', '');
   } catch (e) {
     return url;
   }

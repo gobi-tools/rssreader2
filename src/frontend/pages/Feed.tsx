@@ -1,6 +1,6 @@
 import { useState } from "preact/hooks";
 import Nav from "../common/Nav.js";
-import { groupByDate } from "../utills/utils.js";
+import { getHostname, groupByDate } from "../utills/utils.js";
 import { EditIcon, OKIcon, TrashIcon } from "../common/Icons.js";
 
 export type ItemProp = {
@@ -52,7 +52,7 @@ export default function Feed({ feed, items }: FeedProps) {
           <div className={'header'}>
             <hgroup>
               <h1>{feed.title}</h1>
-              <a className={'word-break'} href={feed.siteUrl} target={'_blank'}>{feed.siteUrl}</a>
+              <a className={'word-break'} href={feed.siteUrl} target={'_blank'}>{getHostname(feed.url)}</a>
             </hgroup>
           </div>
           <a role={'button'} className={'button-small'} href={`/feeds/subscription/${feed.subscriptionId}/read`}>
