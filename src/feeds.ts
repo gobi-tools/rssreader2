@@ -218,6 +218,12 @@ export async function subscribe(userId: string, url: string) {
 }
 
 export function listFeeds(userId: string) {
+  // true when this subscription sits in no section at all
+  const isOrphan = sql<boolean>`not exists (
+    select 1 from ${sectionFeed}
+    where ${sectionFeed.subscriptionId} = ${subscription.id}
+  )`;
+
   return db
     .select({
       id: feed.id,
@@ -225,16 +231,13 @@ export function listFeeds(userId: string) {
       title: feed.title,
       url: feed.url,
       siteUrl: feed.siteUrl,
-      // true when this subscription sits in no section at all
-      isOrphan: sql<boolean>`not exists (
-        select 1 from ${sectionFeed}
-        where ${sectionFeed.subscriptionId} = ${subscription.id}
-      )`.mapWith(Boolean),
+      isOrphan: isOrphan.mapWith(Boolean),
     })
     .from(subscription)
     .innerJoin(feed, eq(feed.id, subscription.feedId))
     .where(eq(subscription.userId, userId))
-    .orderBy(asc(feed.title));
+    // orphans (brand-new, unsectioned feeds) float to the top, then A-Z
+    .orderBy(desc(isOrphan), asc(feed.title));
 }
 
 export function getSubscribedFeed(subscriptionId: string, userId: string) {
