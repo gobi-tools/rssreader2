@@ -71,7 +71,7 @@ export default function Section({ section, items }: SectionProps) {
         </div>
       </section>
 
-      {items.length === 0 && <p>Nothing here yet.</p>}
+      {filtered.length === 0 && <p>Nothing here yet.</p>}
       {filtered.map((group) => (
         <section key={group.label}>
           <h2>{group.label}</h2>
