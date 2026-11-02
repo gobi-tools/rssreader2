@@ -1,10 +1,14 @@
+import { useState } from "preact/hooks";
 import Nav from "../../common/Nav.js";
+import { bytes } from "stream/consumers";
 
 export type DeleteSectionProps = {
   sectionId: string;
 }
 
 export default function DeleteSection({ sectionId }: DeleteSectionProps) {
+  const [busy, setBusy] = useState(false);
+
   return <>
     <header>
       <Nav active='home' />
@@ -17,19 +21,20 @@ export default function DeleteSection({ sectionId }: DeleteSectionProps) {
         </hgroup>
       </section>
 
-      <div className={'row disable-mobile'}>
-        <a href={`/sections/${sectionId}`}>
-          <button type={'reset'}>Cancel</button>
-        </a>
-        <div></div>
-        <form
-          method={'post'}
-          action={`/sections/${sectionId}/delete`}>
-          <button className={'error'} type={'submit'}>
-            <span>Delete</span>
+      <form
+        method={'post'}
+        action={`/sections/${sectionId}/delete`}
+        onSubmit={() => setBusy(true)}>
+        <div className={'row disable-mobile'}>
+          <a href={`/sections/${sectionId}`} role={'button'} aria-disabled={busy}>
+            Cancel
+          </a>
+          <div></div>
+          <button className={'error'} type={'submit'} disabled={busy} aria-busy={busy}>
+            Delete
           </button>
-        </form>
-      </div>
+        </div>
+      </form>
     </main>
   </>
 }

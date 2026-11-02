@@ -1,3 +1,4 @@
+import { useState } from "preact/hooks";
 import Nav from "../common/Nav.js";
 import { getHostname } from "../utills/utils.js";
 
@@ -31,6 +32,8 @@ export default function AddSection({
   formError
 }: AddSectionProps
 ) {
+  const [busy, setBusy] = useState(false);
+  
   return <>
     <header>
       <Nav active={'home'} />
@@ -46,7 +49,7 @@ export default function AddSection({
 
       {formError && <p className="error">{formError}</p>}
 
-      <form method='post' action={action}>
+      <form method='post' action={action} onSubmit={() => setBusy(true)}>
         <label>
           Name
           <input type={'text'} name={'name'} defaultValue={name} required placeholder={"e.g. Tech"} />
@@ -70,13 +73,13 @@ export default function AddSection({
         </fieldset>
 
         <div className={'row disable-mobile'}>
-          <button type={'submit'}>
+          <button type={'submit'} aria-busy={busy} disabled={busy}>
             {!isEditing && <><span>Add</span></>}
             {isEditing && <><span>Update</span></>}
           </button>
           <div></div>
           {isEditing &&
-            <a href={`/sections/${id}/delete`} role={'button'} class={'error'}>
+            <a href={`/sections/${id}/delete`} role={'button'} class={'error'} aria-disabled={busy}>
               <span>Delete</span>
             </a>
           }

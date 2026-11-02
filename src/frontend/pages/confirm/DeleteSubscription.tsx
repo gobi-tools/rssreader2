@@ -1,3 +1,4 @@
+import { useState } from "preact/hooks";
 import Nav from "../../common/Nav.js";
 
 export type DeleteSubscriptionProps = {
@@ -5,6 +6,8 @@ export type DeleteSubscriptionProps = {
 }
 
 export default function DeleteSubscription({ subscriptionId }: DeleteSubscriptionProps) {
+  const [busy, setBusy] = useState(false);
+  
   return <>
     <header>
       <Nav active='feeds' />
@@ -17,21 +20,21 @@ export default function DeleteSubscription({ subscriptionId }: DeleteSubscriptio
         </hgroup>
       </section>
 
-      <div className={'row disable-mobile'}>
-        <a href={`/feeds/subscription/${subscriptionId}`}>
-          <button type={'reset'}>Cancel</button>
-        </a>
-        <div></div>
-        <form
-          method={'post'}
-          action={`/feeds/subscription/${subscriptionId}/delete`}>
-          <button className={'error'} type={'submit'}>
-            <span>Delete</span>
+
+      <form
+        method={'post'}
+        action={`/feeds/subscription/${subscriptionId}/delete`}
+        onSubmit={() => setBusy(true)}>
+        <div className={'row disable-mobile'}>
+          <a href={`/feeds/subscription/${subscriptionId}`} role={'button'} aria-disabled={busy}>
+            Cancel
+          </a>
+          <div></div>
+          <button className={'error'} type={'submit'} disabled={busy} aria-busy={busy}>
+            Delete
           </button>
-        </form>
-      </div>
-
-
+        </div>
+      </form>
     </main>
   </>
 }

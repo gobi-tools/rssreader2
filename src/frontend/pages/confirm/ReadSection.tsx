@@ -1,3 +1,4 @@
+import { useState } from "preact/hooks";
 import Nav from "../../common/Nav.js";
 
 export type ReadSectionProps = {
@@ -5,6 +6,8 @@ export type ReadSectionProps = {
 }
 
 export default function ReadSection({ sectionId }: ReadSectionProps) {
+  const [busy, setBusy] = useState(false);
+  
   return <>
     <header>
       <Nav active='home' />
@@ -17,19 +20,21 @@ export default function ReadSection({ sectionId }: ReadSectionProps) {
         </hgroup>
       </section>
 
-      <div className={'row disable-mobile'}>
-        <a href={`/sections/${sectionId}`}>
-          <button type={'reset'}>Cancel</button>
-        </a>
-        <div></div>
-        <form
-          method={'post'}
-          action={`/sections/${sectionId}/read`}>
-          <button type={'submit'}>
-            <span>Read all</span>
+      <form
+        method={'post'}
+        action={`/sections/${sectionId}/read`}
+        onSubmit={() => setBusy(true)}>
+        <div className={'row disable-mobile'} aria-disabled={busy}>
+          <a href={`/sections/${sectionId}`} role={'button'}>
+            Cancel
+          </a>
+          <div></div>
+
+          <button class={'success'} type={'submit'} disabled={busy} aria-busy={busy}>
+            Read all
           </button>
-        </form>
-      </div>
+        </div>
+      </form>
     </main>
   </>
 }
