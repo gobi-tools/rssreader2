@@ -26,7 +26,7 @@ export default function DeleteSection({ sectionId }: DeleteSectionProps) {
         action={`/sections/${sectionId}/delete`}
         onSubmit={() => setBusy(true)}>
         <div className={'row disable-mobile'}>
-          <a href={`/sections/${sectionId}`} role={'button'} aria-disabled={busy}>
+          <a href={`/sections/${sectionId}`} role={'button'} type={'reset'} aria-disabled={busy}>
             Cancel
           </a>
           <div></div>

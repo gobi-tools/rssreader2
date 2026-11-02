@@ -7,7 +7,7 @@ export type DeleteSubscriptionProps = {
 
 export default function DeleteSubscription({ subscriptionId }: DeleteSubscriptionProps) {
   const [busy, setBusy] = useState(false);
-  
+
   return <>
     <header>
       <Nav active='feeds' />
@@ -26,7 +26,7 @@ export default function DeleteSubscription({ subscriptionId }: DeleteSubscriptio
         action={`/feeds/subscription/${subscriptionId}/delete`}
         onSubmit={() => setBusy(true)}>
         <div className={'row disable-mobile'}>
-          <a href={`/feeds/subscription/${subscriptionId}`} role={'button'} aria-disabled={busy}>
+          <a href={`/feeds/subscription/${subscriptionId}`} role={'button'} type={'reset'} aria-disabled={busy}>
             Cancel
           </a>
           <div></div>

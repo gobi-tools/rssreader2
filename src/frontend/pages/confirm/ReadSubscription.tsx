@@ -25,11 +25,11 @@ export default function ReadSubscription({ subscriptionId }: ReadSubscriptionPro
         action={`/feeds/subscription/${subscriptionId}/read`}
         onSubmit={() => setBusy(true)}>
         <div className={'row disable-mobile'}>
-          <a href={`/feeds/subscription/${subscriptionId}`} role={'button'} aria-disabled={busy}>
-            Cancel
+          <a href={`/feeds/subscription/${subscriptionId}`} role={'button'} type={'reset'} aria-disabled={busy}>
+           Cancel
           </a>
           <div></div>
-          <button class={'success'} type={'submit'} disabled={busy} aria-busy={busy}>
+          <button type={'submit'} disabled={busy} aria-busy={busy}>
             Read all
           </button>
         </div>

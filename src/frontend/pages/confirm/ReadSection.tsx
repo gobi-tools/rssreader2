@@ -24,13 +24,12 @@ export default function ReadSection({ sectionId }: ReadSectionProps) {
         method={'post'}
         action={`/sections/${sectionId}/read`}
         onSubmit={() => setBusy(true)}>
-        <div className={'row disable-mobile'} aria-disabled={busy}>
-          <a href={`/sections/${sectionId}`} role={'button'}>
+        <div className={'row disable-mobile'}>
+          <a href={`/sections/${sectionId}`} role={'button'} type={'reset'} aria-disabled={busy}>
             Cancel
           </a>
           <div></div>
-
-          <button class={'success'} type={'submit'} disabled={busy} aria-busy={busy}>
+          <button type={'submit'} disabled={busy} aria-busy={busy}>
             Read all
           </button>
         </div>
