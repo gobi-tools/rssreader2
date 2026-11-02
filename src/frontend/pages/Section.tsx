@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 import Nav from "../common/Nav.js";
-import { groupByDate } from '../utills/utils.js';
-import { EditIcon, OKIcon } from '../common/Icons.js';
+import { filterRead, groupByDate } from '../utills/utils.js';
+import { EditIcon, OKIcon, UnreadIcon } from '../common/Icons.js';
 
 export type SectionProp = {
   id: string;
@@ -39,7 +39,10 @@ export default function Section({ section, items }: SectionProps) {
   const [opened, setOpened] = useState<string[]>([]);
   const open = (id: string) => setOpened((ids) => [...ids, id]);
 
+  const [showUnread, setShowUnread] = useState(false);
+
   const grouped = groupByDate(items);
+  const filtered = filterRead(grouped, showUnread);
 
   return <>
     <header>
@@ -54,6 +57,11 @@ export default function Section({ section, items }: SectionProps) {
               <p>{items.length} articles {section.unread > 0 && <span className={'success'}>({section.unread} new)</span>}</p>
             </hgroup>
           </div>
+          <button
+            onClick={() => setShowUnread(!showUnread)} 
+            className={`button-small ${showUnread && 'success'}`}>
+            <UnreadIcon/>
+          </button>
           <a href={`/sections/${section.id}/read`} role={'button'} className={'button-small'}>
             <OKIcon />
           </a>
@@ -64,7 +72,7 @@ export default function Section({ section, items }: SectionProps) {
       </section>
 
       {items.length === 0 && <p>Nothing here yet.</p>}
-      {grouped.map((group) => (
+      {filtered.map((group) => (
         <section key={group.label}>
           <h2>{group.label}</h2>
 

@@ -97,41 +97,6 @@ export function EditIcon() {
   </svg>
 }
 
-export function LogoutIcon() {
-  return <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round">
-    <path d="m16 17 5-5-5-5" />
-    <path d="M21 12H9" /><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-  </svg>
-}
-
-export function UpdateIcon() {
-  return <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round">
-    <path d="M12.5 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10.2a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V12" />
-    <path d="M16 13H8a1 1 0 0 0-1 1v7" />
-    <path d="M19 22v-6" />
-    <path d="M22 19h-6" />
-    <path d="M7 3v4a1 1 0 0 0 1 1h7" />
-  </svg>
-}
-
 export function OKIcon() {
   return <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -144,6 +109,24 @@ export function OKIcon() {
     stroke-linecap="round"
     stroke-linejoin="round">
     <path d="M20 6 9 17l-5-5" />
+  </svg>
+}
+
+export function UnreadIcon() {
+  return <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round">
+    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
+    <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
+    <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" />
+    <path d="m2 2 20 20" />
   </svg>
 }
 
