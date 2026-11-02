@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 import Nav from "../common/Nav.js";
 import { filterRead, groupByDate } from '../utills/utils.js';
 import { EditIcon, OKIcon, UnreadIcon } from '../common/Icons.js';
@@ -6,7 +6,6 @@ import { EditIcon, OKIcon, UnreadIcon } from '../common/Icons.js';
 export type SectionProp = {
   id: string;
   name: string;
-  unread: number;
 };
 
 export type ItemProp = {
@@ -38,6 +37,10 @@ export type DetailedItem = {
 export default function Section({ section, items }: SectionProps) {
   const [opened, setOpened] = useState<string[]>([]);
   const open = (id: string) => setOpened((ids) => [...ids, id]);
+  
+  const unread = useMemo<number>(() => {
+    return items.filter((i) => !(i.read || opened.includes(i.id))).length;
+  }, [items, opened]);
 
   const [showUnread, setShowUnread] = useState(false);
 
@@ -54,7 +57,7 @@ export default function Section({ section, items }: SectionProps) {
           <div className={'header'}>
             <hgroup>
               <h1>{section.name}</h1>
-              <p>{items.length} articles {section.unread > 0 && <span className={'success'}>({section.unread} new)</span>}</p>
+              <p>{items.length} articles {unread > 0 && <span className={'success'}>({unread} new)</span>}</p>
             </hgroup>
           </div>
           <button
