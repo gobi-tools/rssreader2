@@ -4,11 +4,7 @@ import { db } from "./db/index.js";
 
 export function listSectionItems(userId: string, sectionId: string, limit = 100, perFeed = 30) {
   const date = sql<number>`coalesce(${item.publishedAt}, ${item.createdAt})`;
-  // Rank each feed's items newest-first so a chatty feed can't fill the whole
-  // page: only its top `perFeed` rows survive the outer filter. feedTitle has
-  // to be aliased — item.title and feed.title would otherwise both come out of
-  // the CTE as "title" and the outer reference would pick the wrong one.
-  const rn = sql<number>`row_number() over (partition by ${item}.feed_id order by ${date} desc)`.as("rn");
+  const rank = sql<number>`row_number() over (partition by ${item}.feed_id order by ${date} desc)`.as("rank");
 
   const ranked = db
     .select({
@@ -18,7 +14,7 @@ export function listSectionItems(userId: string, sectionId: string, limit = 100,
       date: date.mapWith(item.publishedAt).as("date"),
       feedTitle: sql<string | null>`${feed.title}`.as("feed_title"),
       readAt: itemRead.readAt,
-      rn,
+      rank,
     })
     .from(sectionFeed)
     .innerJoin(subscription, eq(subscription.id, sectionFeed.subscriptionId))
@@ -32,7 +28,7 @@ export function listSectionItems(userId: string, sectionId: string, limit = 100,
     .with(cte)
     .select({ id: cte.id, title: cte.title, url: cte.url, date: cte.date, feedTitle: cte.feedTitle, readAt: cte.readAt })
     .from(cte)
-    .where(lte(cte.rn, perFeed))
+    .where(lte(cte.rank, perFeed))
     .orderBy(desc(cte.date))
     .limit(limit)
     .all();
