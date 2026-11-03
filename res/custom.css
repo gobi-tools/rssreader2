@@ -48,12 +48,22 @@
   }
 }
 
+.padding-bottom {
+  padding-bottom: var(--space-2xs);
+}
+
 @container(max-width: 600px) {
-  .padding-bottom-on-mobile {
-    padding-bottom: var(--space-m);
+  .padding-bottom {
+    padding-bottom: var(--space-xs);
   }
 }
 
 @view-transition {
   navigation: auto;
+}
+
+@container(max-width: 600px) {
+  main {
+    margin-top: var(--space-sm);
+  }
 }

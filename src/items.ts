@@ -1,5 +1,5 @@
 import { desc, sql, eq, and, lte } from "drizzle-orm";
-import { feed, item, itemRead, section, sectionFeed, subscription } from "./db/feeds-schema.js";
+import { feed, item, itemRead, sectionFeed, subscription } from "./db/feeds-schema.js";
 import { db } from "./db/index.js";
 
 export function listSectionItems(userId: string, sectionId: string, limit = 100, perFeed = 30) {

@@ -56,10 +56,10 @@ export default function Feed({ feed, items }: FeedProps) {
             </hgroup>
           </div>
           <a role={'button'} className={'button-small'} href={`/feeds/subscription/${feed.subscriptionId}/read`}>
-            <OKIcon/>
+            <OKIcon />
           </a>
           <a role={'button'} className={'error button-small'} href={`/feeds/subscription/${feed.subscriptionId}/delete`}>
-            <TrashIcon/>
+            <TrashIcon />
           </a>
         </div>
       </section>
@@ -75,22 +75,18 @@ export default function Feed({ feed, items }: FeedProps) {
               const read = i.read || opened.includes(i.id);
 
               return (
-                <li key={i.id}>
-                  <div>
-                    <span>{i.index + 1}</span>
-                    <span>&#46; </span>
-                    <a
-                      href={`/items/${i.id}/open`}
-                      target={'_blank'}
-                      rel={'noopener'}
-                      onClick={() => open(i.id)}
-                      onAuxClick={() => open(i.id)}>
-                      {read && <span className={'read'}>{title}</span>}
-                      {!read && <span>{title}</span>}
-                    </a>
-                  </div>
+                <li key={i.id} className={'row disable-mobile padding-bottom'}>
+                  <a
+                    href={`/items/${i.id}/open`}
+                    target={'_blank'}
+                    rel={'noopener'}
+                    onClick={() => open(i.id)}
+                    onAuxClick={() => open(i.id)}>
+                    {read && <span className={'read'}>{title}</span>}
+                    {!read && <span>{title}</span>}
+                  </a>
                 </li>
-              )
+              );
             })}
           </ul>
         </section>

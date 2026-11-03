@@ -37,7 +37,7 @@ export type DetailedItem = {
 export default function Section({ section, items }: SectionProps) {
   const [opened, setOpened] = useState<string[]>([]);
   const open = (id: string) => setOpened((ids) => [...ids, id]);
-  
+
   const unread = useMemo<number>(() => {
     return items.filter((i) => !(i.read || opened.includes(i.id))).length;
   }, [items, opened]);
@@ -61,9 +61,9 @@ export default function Section({ section, items }: SectionProps) {
             </hgroup>
           </div>
           <button
-            onClick={() => setShowUnread(!showUnread)} 
+            onClick={() => setShowUnread(!showUnread)}
             className={`button-small ${showUnread && 'success'}`}>
-            <UnreadIcon/>
+            <UnreadIcon />
           </button>
           <a href={`/sections/${section.id}/read`} role={'button'} className={'button-small'}>
             <OKIcon />
@@ -85,10 +85,11 @@ export default function Section({ section, items }: SectionProps) {
               const read = i.read || opened.includes(i.id);
 
               return (
-                <li key={i.id} className={'row padding-bottom-on-mobile'}>
+                <li key={i.id} className={'row disable-mobile padding-bottom'}>
+                  <div className={'col-3 text-light'}>
+                    {i.feedTitle}
+                  </div>
                   <div>
-                    <span>{i.index + 1}</span>
-                    <span>&#46; </span>
                     <a
                       href={`/items/${i.id}/open`}
                       target={'_blank'}
@@ -98,12 +99,6 @@ export default function Section({ section, items }: SectionProps) {
                       {read && <span className={'read'}>{title}</span>}
                       {!read && <span>{title}</span>}
                     </a>
-                    <span className={'text-light hide-on-desktop'}>
-                      {i.feedTitle}
-                    </span>
-                  </div>
-                  <div className={'col-3 text-light hide-on-mobile align-right no-wrap'}>
-                    {i.feedTitle}
                   </div>
                 </li>
               )
