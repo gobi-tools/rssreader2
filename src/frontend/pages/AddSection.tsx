@@ -1,6 +1,7 @@
 import { useState } from "preact/hooks";
 import Nav from "../common/Nav.js";
 import { getHostname } from "../utills/utils.js";
+import { TrashIcon } from "../common/Icons.js";
 
 export type SectionFeedProp = {
   subscriptionId: string;
@@ -33,18 +34,27 @@ export default function AddSection({
 }: AddSectionProps
 ) {
   const [busy, setBusy] = useState(false);
-  
+
   return <>
     <header>
       <Nav active={'home'} />
     </header>
     <main>
 
-      <section>
-        <hgroup>
-          <h1>{heading}</h1>
-          <p>{isEditing ? 'Update details' : 'Add details'}</p>
-        </hgroup>
+      <section role={'group'}>
+        <div className={'row'}>
+          <div className={'header'}>
+            <hgroup>
+              <h1>{heading}</h1>
+              <p>{isEditing ? 'Update details' : 'Add details'}</p>
+            </hgroup>
+          </div>
+          {isEditing &&
+            <a role={'button'} href={`/sections/${id}/delete`} className={'error button-small'}>
+              <TrashIcon />
+            </a>
+          }
+        </div>
       </section>
 
       {formError && <p className="error">{formError}</p>}
@@ -73,16 +83,11 @@ export default function AddSection({
         </fieldset>
 
         <div className={'row disable-mobile'}>
+          <div></div>
           <button type={'submit'} aria-busy={busy} disabled={busy}>
             {!isEditing && <><span>Add</span></>}
             {isEditing && <><span>Update</span></>}
           </button>
-          <div></div>
-          {isEditing &&
-            <a href={`/sections/${id}/delete`} role={'button'} class={'error'} aria-disabled={busy}>
-              <span>Delete</span>
-            </a>
-          }
         </div>
       </form>
     </main>
