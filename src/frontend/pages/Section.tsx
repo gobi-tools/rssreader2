@@ -86,7 +86,7 @@ export default function Section({ section, items }: SectionProps) {
 
               return (
                 <li key={i.id} className={'row disable-mobile padding-bottom'}>
-                  <div className={'col-3 text-light'}>
+                  <div className={'col-3 text-light ellipsis'}>
                     {i.feedTitle}
                   </div>
                   <div>

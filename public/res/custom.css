@@ -40,6 +40,11 @@
   }
 }
 
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @container(min-width: 600px) {
   .no-wrap {
     white-space: nowrap;
