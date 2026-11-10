@@ -6,6 +6,10 @@ const DAY = 24 * 60 * 60 * 1000;
 
 export type Grouping = 'day' | 'week' | 'month' | 'year';
 
+const LEVELS: Grouping[] = ['day', 'week', 'month', 'year'];
+const MIN_DENSE = 2; 
+const SPARSE_STREAK = 2;
+
 interface Item { date: string, read: boolean };
 
 export type GroupingResult <I extends Item> = { 
@@ -23,18 +27,41 @@ export function pickGrouping(dates: number[]): Grouping {
 }
 
 export function groupByDate<I extends Item>(items: I[]): GroupingResult<I>[] {
-  const grouping = pickGrouping(items.map((i) => Date.parse(i.date)));
-  const groups: { label: string, items: I[] }[] = [];
-  let i = 0;
-  for (const item of items) {
-    const label = groupLabel(new Date(item.date), grouping);
-    const last = groups.at(-1);
-    const indexed = { ...item, index: i };
+  const picked = pickGrouping(items.map((i) => Date.parse(i.date)));
+  return buildGroups(items, 0, LEVELS.indexOf(picked), picked !== 'day');
+}
+
+// this algorithm will take a number of items and it will dive them in groups, ordered by date
+// recent elements will have one grouping (by day/week/month/year)
+// later elements will be grouped again such that sparser periods (e.g. 20 items in 20 weeks) are grouped one level coarser (e.g week/month/year) 
+function buildGroups<I extends Item>(items: I[], from: number, levelIdx: number, canCoarse: boolean): GroupingResult<I>[] {
+  const level = LEVELS[levelIdx];
+  // do the first grouping
+  const buckets: { label: string, start: number, items: I[] }[] = [];
+  for (let i = from; i < items.length; i++) {
+    const label = groupLabel(new Date(items[i].date), level);
+    const indexed = { ...items[i], index: i };
+    const last = buckets.at(-1);
     if (last?.label === label) last.items.push(indexed);
-    else groups.push({ label, items: [indexed] });
-    i++;
+    else buckets.push({ label, start: i, items: [indexed] });
   }
-  return groups;
+
+  // find the first run of sparse buckets and group everything after one level coarser (and may coarsen again)
+  if (canCoarse && levelIdx < LEVELS.length - 1) {
+    let run = 0;
+    for (let b = 0; b < buckets.length; b++) {
+      run = buckets[b].items.length < MIN_DENSE ? run + 1 : 0;
+      if (run >= SPARSE_STREAK) {
+        const cut = buckets[b - run + 1].start;
+        return [
+          ...buckets.filter((g) => g.start < cut).map(({ label, items }) => ({ label, items })),
+          ...buildGroups(items, cut, levelIdx + 1, true),
+        ];
+      }
+    }
+  }
+
+  return buckets.map(({ label, items }) => ({ label, items }));
 }
 
 function groupLabel(date: Date, grouping: Grouping): string {
