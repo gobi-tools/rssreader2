@@ -40,16 +40,17 @@ export default function Feeds({ feeds }: FeedsProps) {
       <ul className={'main-list'}>
         {feeds.map((f) => (
           <li key={f.subscriptionId} className={'row'}>
-            <div>
-              <a 
+            <p>
+              <a
                 className={`${f.isOrphan === true ? 'success' : ''}`}
                 href={`/feeds/subscription/${f.subscriptionId}`}>
                 {f.title ?? f.url}
               </a>
-            </div>
-            <div className={'col-5 text-light hide-on-mobile align-right no-wrap'}>
-              {getHostname(f.url)}
-            </div>
+              <br />
+              <span className={'text-light'}>
+                <small>{getHostname(f.url)}</small>
+              </span>
+            </p>
           </li>
         ))}
       </ul>
