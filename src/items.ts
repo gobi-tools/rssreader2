@@ -1,8 +1,8 @@
-import { desc, sql, eq, and, lte } from "drizzle-orm";
+import { desc, sql, eq, and, or, lte, isNull } from "drizzle-orm";
 import { feed, item, itemRead, sectionFeed, subscription } from "./db/feeds-schema.js";
 import { db } from "./db/index.js";
 
-export function listSectionItems(userId: string, sectionId: string, limit = 100, perFeed = 30) {
+export function listSectionItems(userId: string, sectionId: string, perFeed = 30) {
   const date = sql<number>`coalesce(${item.publishedAt}, ${item.createdAt})`;
   const rank = sql<number>`row_number() over (partition by ${item}.feed_id order by ${date} desc)`.as("rank");
 
@@ -28,9 +28,13 @@ export function listSectionItems(userId: string, sectionId: string, limit = 100,
     .with(cte)
     .select({ id: cte.id, title: cte.title, url: cte.url, date: cte.date, feedTitle: cte.feedTitle, readAt: cte.readAt })
     .from(cte)
-    .where(lte(cte.rank, perFeed))
+    // Unread is exempt from the per-feed cap: the list must contain every
+    // unread item, or the count derived from it (Section.tsx) drifts from
+    // unreadCount (home) and the missing ones can never be clicked to zero.
+    // Deliberately no global limit either — a date-ordered LIMIT is exactly
+    // what used to hide older unread items (the "62 vs 48" bug).
+    .where(or(lte(cte.rank, perFeed), isNull(cte.readAt)))
     .orderBy(desc(cte.date))
-    .limit(limit)
     .all();
 }
 
