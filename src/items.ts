@@ -2,7 +2,7 @@ import { desc, sql, eq, and, or, lte, isNull } from "drizzle-orm";
 import { feed, item, itemRead, sectionFeed, subscription } from "./db/feeds-schema.js";
 import { db } from "./db/index.js";
 
-export function listSectionItems(userId: string, sectionId: string, perFeed = 30) {
+export function listSectionItems(userId: string, sectionId: string, perFeed = 30, readCap = 20) {
   const date = sql<number>`coalesce(${item.publishedAt}, ${item.createdAt})`;
   const rank = sql<number>`row_number() over (partition by ${item}.feed_id order by ${date} desc)`.as("rank");
 
@@ -23,18 +23,41 @@ export function listSectionItems(userId: string, sectionId: string, perFeed = 30
     .leftJoin(itemRead, and(eq(itemRead.itemId, item.id), eq(itemRead.userId, userId)))
     .where(eq(sectionFeed.sectionId, sectionId));
 
-  const cte = db.$with("ranked").as(ranked);
+  const rankedCte = db.$with("ranked").as(ranked);
+
+  // Second layer: apply the per-feed cap, then rank the surviving read items
+  // across the whole section by recency. Ranking AFTER the per-feed filter
+  // matters — otherwise one chatty feed's excess read items would occupy the
+  // global slots and starve other feeds' history. Unread goes into its own
+  // partition here (its rank is never used; it's exempt below).
+  const cappedCte = db.$with("capped").as(
+    db
+      .select({
+        id: rankedCte.id,
+        title: rankedCte.title,
+        url: rankedCte.url,
+        date: rankedCte.date,
+        feedTitle: rankedCte.feedTitle,
+        readAt: rankedCte.readAt,
+        readRank: sql<number>`row_number() over (partition by ${rankedCte.readAt} is null order by ${rankedCte.date} desc)`.as("read_rank"),
+      })
+      .from(rankedCte)
+      .where(or(lte(rankedCte.rank, perFeed), isNull(rankedCte.readAt)))
+  );
+
   return db
-    .with(cte)
-    .select({ id: cte.id, title: cte.title, url: cte.url, date: cte.date, feedTitle: cte.feedTitle, readAt: cte.readAt })
-    .from(cte)
-    // Unread is exempt from the per-feed cap: the list must contain every
-    // unread item, or the count derived from it (Section.tsx) drifts from
+    .with(rankedCte, cappedCte)
+    .select({ id: cappedCte.id, title: cappedCte.title, url: cappedCte.url, date: cappedCte.date, feedTitle: cappedCte.feedTitle, readAt: cappedCte.readAt })
+    .from(cappedCte)
+    // Unread is exempt from both caps: the list must contain every unread
+    // item, or the count derived from it (Section.tsx) drifts from
     // unreadCount (home) and the missing ones can never be clicked to zero.
-    // Deliberately no global limit either — a date-ordered LIMIT is exactly
+    // Read history is bounded instead — at most perFeed per feed (chatty
+    // guard) and at most readCap overall, so the payload stays independent of
+    // section age and feed count. Still no date-ordered LIMIT: that's exactly
     // what used to hide older unread items (the "62 vs 48" bug).
-    .where(or(lte(cte.rank, perFeed), isNull(cte.readAt)))
-    .orderBy(desc(cte.date))
+    .where(or(isNull(cappedCte.readAt), lte(cappedCte.readRank, readCap)))
+    .orderBy(desc(cappedCte.date))
     .all();
 }
 
