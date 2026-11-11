@@ -28,13 +28,13 @@ export function pickGrouping(dates: number[]): Grouping {
 
 export function groupByDate<I extends Item>(items: I[]): GroupingResult<I>[] {
   const picked = pickGrouping(items.map((i) => Date.parse(i.date)));
-  return buildGroups(items, 0, LEVELS.indexOf(picked), picked !== 'day');
+  return buildGroups(items, 0, LEVELS.indexOf(picked));
 }
 
 // this algorithm will take a number of items and it will dive them in groups, ordered by date
 // recent elements will have one grouping (by day/week/month/year)
 // later elements will be grouped again such that sparser periods (e.g. 20 items in 20 weeks) are grouped one level coarser (e.g week/month/year) 
-function buildGroups<I extends Item>(items: I[], from: number, levelIdx: number, canCoarse: boolean): GroupingResult<I>[] {
+function buildGroups<I extends Item>(items: I[], from: number, levelIdx: number): GroupingResult<I>[] {
   const level = LEVELS[levelIdx];
   // do the first grouping
   const buckets: { label: string, start: number, items: I[] }[] = [];
@@ -47,7 +47,7 @@ function buildGroups<I extends Item>(items: I[], from: number, levelIdx: number,
   }
 
   // find the first run of sparse buckets and group everything after one level coarser (and may coarsen again)
-  if (canCoarse && levelIdx < LEVELS.length - 1) {
+  if (levelIdx < LEVELS.length - 1) {
     let run = 0;
     for (let b = 0; b < buckets.length; b++) {
       run = buckets[b].items.length < MIN_DENSE ? run + 1 : 0;
@@ -55,7 +55,7 @@ function buildGroups<I extends Item>(items: I[], from: number, levelIdx: number,
         const cut = buckets[b - run + 1].start;
         return [
           ...buckets.filter((g) => g.start < cut).map(({ label, items }) => ({ label, items })),
-          ...buildGroups(items, cut, levelIdx + 1, true),
+          ...buildGroups(items, cut, levelIdx + 1),
         ];
       }
     }
