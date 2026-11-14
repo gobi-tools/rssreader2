@@ -10,9 +10,7 @@ export default function Document({ children, title }: { children: any; title?: s
       <link rel="stylesheet" href="/res/custom.css"></link>
     </head>
     <body>
-      <main>
-        {children}
-      </main>
+      {children}
     </body>
   </html>
 }
